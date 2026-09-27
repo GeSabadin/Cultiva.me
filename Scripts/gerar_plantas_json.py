@@ -22,8 +22,12 @@ Na primeira vez o script baixa sozinho o banco de dados (48 MB) e guarda em
 _openplantdb.json, ao lado do script. Nas próximas vezes ele reaproveita o
 arquivo baixado e roda em segundos.
 
-IMPORTANTE: coloque _openplantdb.json no .gitignore. São 48 MB que não
-precisam ir para o repositório do trabalho.
+IMPORTANTE: coloque _openplantdb.json e _plantfolio.json no .gitignore.
+São arquivos grandes que não precisam ir para o repositório do trabalho.
+
+LICENÇA: o script usa duas fontes. A segunda (plantfolio) é CC BY-NC-SA 4.0,
+o que obriga o conteúdo do site a creditar a fonte, não ter uso comercial e
+ser distribuído sob a mesma licença. Isso precisa constar na página "Sobre".
 
 
 ===============================================================================
@@ -401,6 +405,136 @@ NOMES = {
 "duranta erecta": ("Pingo-de-ouro", "ornamental"),
 }
 
+# =============================================================================
+# 3-B. SEGUNDA FONTE: plantfolio-common-plants
+# =============================================================================
+# Acrescenta dados de cuidado que o OpenPlantDB não tem: toxicidade para pets,
+# intervalo de rega em dias por estação, temperatura, umidade, pH, drenagem,
+# tempo de vida, velocidade de crescimento e formas de propagação.
+#
+# ATENÇÃO À LICENÇA: este banco é CC BY-NC-SA 4.0, não domínio público.
+# Usá-lo obriga o conteúdo do site a: creditar a fonte, não ter uso comercial
+# e ser distribuído sob a mesma licença. Isso está declarado no bloco "meta"
+# do JSON gerado e precisa aparecer também na página "Sobre" do site.
+#
+# Nem toda planta é encontrada: o plantfolio tem 952 fichas por gênero, não
+# por espécie. Quem não casar simplesmente fica sem o bloco "cuidados".
+
+ARQUIVO_PLANTFOLIO = PASTA_DO_SCRIPT / "_plantfolio.json"
+
+URL_PLANTFOLIO = ("https://raw.githubusercontent.com/Luminoid/"
+                  "plantfolio-common-plants/main/dist/common_plants.json")
+
+# Tradução dos valores. O banco usa palavras fixas em inglês.
+TOXICIDADE = {"toxic": "toxica", "mildlyToxic": "levemente-toxica",
+              "nonToxic": "nao-toxica", "unknown": "desconhecida"}
+
+UMIDADE = {"low": "baixa", "medium": "media", "high": "alta",
+           "veryHigh": "muito-alta"}
+
+PH_SOLO = {"acidic": "acido", "neutral": "neutro", "alkaline": "alcalino",
+           "adaptable": "adaptavel"}
+
+DRENAGEM = {"wellDraining": "bem-drenado", "excellentDrainage": "drenagem-alta",
+            "moistureRetentive": "retem-umidade",
+            "waterloggingTolerant": "tolera-encharcamento"}
+
+CRESCIMENTO = {"slow": "lento", "moderate": "moderado", "fast": "rapido"}
+
+MODO_DE_REGAR = {"topWatering": "por-cima", "bottomWatering": "por-baixo",
+                 "immersion": "imersao", "misting": "borrifar"}
+
+PROPAGACAO = {"seeds": "sementes", "stemCuttings": "estaquia-de-caule",
+              "leafCuttings": "estaquia-de-folha", "division": "divisao-de-touceira",
+              "airLayering": "alporquia", "layering": "mergulhia",
+              "offsets": "mudas-laterais", "plantlets": "mudas-aereas",
+              "tuberDivision": "divisao-de-tuberculos",
+              "bulbDivision": "divisao-de-bulbos", "runners": "estolhos",
+              "spores": "esporos", "grafting": "enxertia"}
+
+
+def baixar_plantfolio():
+    """Baixa o segundo banco na primeira vez. Devolve [] se não der."""
+    if not ARQUIVO_PLANTFOLIO.exists():
+        print("Baixando o plantfolio (dados de cuidado)...")
+        try:
+            urllib.request.urlretrieve(URL_PLANTFOLIO, ARQUIVO_PLANTFOLIO)
+            print("  pronto.\n")
+        except Exception as erro:
+            print(f"  não consegui baixar ({erro}); seguindo sem essa fonte.\n")
+            return []
+    return json.loads(ARQUIVO_PLANTFOLIO.read_text(encoding="utf-8"))
+
+
+def indexar_plantfolio(fichas):
+    """Monta um índice: 'monstera deliciosa' -> ficha do plantfolio.
+
+    As fichas de lá são por gênero e citam as espécies no texto, então
+    procuramos os nomes científicos que aparecem em cada uma.
+    """
+    procurar_binomio = re.compile(r"\b([A-Z][a-z]+)\s+([a-z][a-z-]{2,})\b")
+    indice = {}
+    for ficha in fichas:
+        texto = "{} {} {}".format(ficha.get("typeName", ""),
+                                  ficha.get("commonExamples", ""),
+                                  ficha.get("description", ""))
+        for genero, especie in procurar_binomio.findall(texto):
+            indice.setdefault(f"{genero.lower()} {especie}", ficha)
+    return indice
+
+
+def montar_referencia(ficha):
+    """Traz o texto original em inglês do plantfolio, como apoio.
+
+    NÃO é para exibir no site: é matéria-prima para quem vai escrever a
+    descrição e as dicas em português. O careTips vem quebrado em frases,
+    no mesmo formato da lista "dicas", para facilitar a reescrita linha a
+    linha.
+    """
+    if not ficha:
+        return None
+
+    texto_dicas = ficha.get("careTips") or ""
+    frases = [f.strip() for f in re.split(r"(?<=[.!?])\s+", texto_dicas) if f.strip()]
+
+    return {
+        "descricao": ficha.get("description") or "",
+        "dicas": frases,
+        "fonte": "plantfolio-common-plants (CC BY-NC-SA 4.0)",
+    }
+
+
+def montar_cuidados(ficha):
+    """Traduz a ficha do plantfolio para o formato do nosso JSON."""
+    if not ficha:
+        return None
+
+    rega_por_estacao = {
+        "primavera": ficha.get("springInterval"),
+        "verao": ficha.get("summerInterval"),
+        "outono": ficha.get("fallInterval"),
+        "inverno": ficha.get("winterInterval"),
+    }
+    # só mantém as estações que têm valor
+    rega_por_estacao = {k: v for k, v in rega_por_estacao.items() if v}
+
+    temperatura = ficha.get("temperaturePreference") or []
+    tempo_de_vida = ficha.get("plantLifeSpan") or []
+
+    return {
+        "toxicoParaPets": TOXICIDADE.get(ficha.get("plantToxicity")),
+        "regaEmDias": rega_por_estacao,
+        "modoDeRegar": MODO_DE_REGAR.get(ficha.get("wateringMethod")),
+        "temperaturaC": {"min": temperatura[0], "max": temperatura[1]} if len(temperatura) == 2 else None,
+        "umidade": UMIDADE.get(ficha.get("humidityPreference")),
+        "phSolo": PH_SOLO.get(ficha.get("soilPhPreference")),
+        "drenagem": DRENAGEM.get(ficha.get("drainagePreference")),
+        "crescimento": CRESCIMENTO.get(ficha.get("growthRate")),
+        "anosDeVida": {"min": tempo_de_vida[0], "max": tempo_de_vida[1]} if len(tempo_de_vida) == 2 else None,
+        "propagacao": [PROPAGACAO.get(m, m) for m in (ficha.get("propagationMethods") or [])],
+        "fonte": "plantfolio-common-plants (CC BY-NC-SA 4.0)",
+    }
+
 
 # =============================================================================
 # 4. EXEMPLOS DE PREENCHIMENTO
@@ -691,6 +825,8 @@ def main():
     for registro in registros:
         por_especie[so_o_nome_da_especie(registro.get("scientific_name"))].append(registro)
 
+    cuidados_por_especie = indexar_plantfolio(baixar_plantfolio())
+
     ja_escrito = ler_plantas_ja_existentes()
     plantas = []
     nao_encontradas = []
@@ -753,6 +889,9 @@ def main():
             "imagem": primeiro_preenchido(
                 antes.get("imagem"), exemplo.get("imagem")),
 
+            "cuidados": montar_cuidados(cuidados_por_especie.get(nome_cientifico)),
+            "referenciaIngles": montar_referencia(cuidados_por_especie.get(nome_cientifico)),
+
             "registrosAgregados": len(variedades),
             "fonte": {
                 "referencia": "OpenPlantDB",
@@ -773,11 +912,24 @@ def main():
             "projeto": "Cultiva.me",
             "geradoEm": date.today().isoformat(),
             "totalPlantas": len(plantas),
-            "fonte": {
-                "nome": "OpenPlantDB",
-                "url": "https://github.com/cwfrazier1/openplantdb",
-                "licenca": "CC0 1.0 (domínio público)",
-            },
+            "licencaDesteArquivo": "CC BY-NC-SA 4.0",
+            "fontes": [
+                {
+                    "nome": "OpenPlantDB",
+                    "url": "https://github.com/cwfrazier1/openplantdb",
+                    "licenca": "CC0 1.0 (domínio público)",
+                    "campos": "luz, rega, ciclo, maturidade, germinação, altura, espaçamento",
+                },
+                {
+                    "nome": "plantfolio-common-plants",
+                    "url": "https://github.com/Luminoid/plantfolio-common-plants",
+                    "licenca": "CC BY-NC-SA 4.0",
+                    "campos": ("tudo dentro dos blocos cuidados e "
+                               "referenciaIngles"),
+                    "obrigacoes": ("creditar a fonte, uso não comercial e "
+                                   "distribuir sob a mesma licença"),
+                },
+            ],
             "camposDoBanco": ["luz", "rega", "ciclo", "maturidadeDias",
                               "germinacaoDias", "alturaCm", "espacamentoCm"],
             "camposCalculados": {
@@ -786,6 +938,9 @@ def main():
             },
             "camposEscritosPorNos": ["descricao", "dicas", "problemasComuns",
                                      "imagem", "familia", "origem", "solo"],
+            "notaReferenciaIngles": ("referenciaIngles é material de apoio para "
+                                     "escrever o conteúdo em português. Não deve "
+                                     "ser exibido no site."),
             "notaMaturidade": ("maturidadeDias é o tempo até a primeira colheita "
                                "nas comestíveis e até a primeira floração nas "
                                "ornamentais."),
@@ -804,6 +959,11 @@ def main():
     print(f"{len(plantas)} plantas -> {ARQUIVO_SAIDA}")
     for categoria, quantas in Counter(p["categoria"] for p in plantas).most_common():
         print(f"  {categoria:12} {quantas:3}")
+
+    com_cuidados = sum(1 for p in plantas if p.get("cuidados"))
+    com_referencia = sum(1 for p in plantas if p.get("referenciaIngles"))
+    print(f"\n  com dados de cuidado (plantfolio): {com_cuidados} de {len(plantas)}")
+    print(f"  com texto de apoio em inglês:      {com_referencia} de {len(plantas)}")
 
     com_texto = sum(1 for p in plantas if p.get("descricao"))
     print(f"\n  com descrição escrita: {com_texto} de {len(plantas)}")
