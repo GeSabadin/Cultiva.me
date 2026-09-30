@@ -1,3 +1,18 @@
+# Bancos baixados pelos scripts (grandes, se baixam de novo sozinhos)
 _openplantdb.json
+_plantfolio.json
 openplantdb/
+
+# Python
 __pycache__/
+*.pyc
+
+# Material de apoio local (resumos, candidatas de fotos, originais)
+local_backup/
+
+# Sistema e editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

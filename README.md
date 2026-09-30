@@ -1,38 +1,65 @@
 # Campos de uma planta
 
-Referência do formato do `Data/Plantas.json`. Exemplo real: a alface.
+> **Antes de publicar ou mexer nas fotos, leia o [LICENCAS.md](LICENCAS.md).**
+> Ele lista o que o site precisa cumprir para usar os dados e as fotos.
+
+Referência do formato do `Data/Plantas.json`. O arquivo tem dois blocos:
+`meta` (licença e fontes) e `plantas` (a lista de 260 fichas).
+
+## Regras gerais
+
+- **Toda planta tem todas as chaves.** Não é preciso testar se um campo existe.
+- **Sem dado é sempre `null`.** Texto vazio é `""` e lista vazia é `[]`.
+- **Valores fixos** (categoria, luz etc.) são minúsculos, sem acento, com
+  hífen no lugar do espaço: `sol-pleno`, `nao-toxica`.
+- **Unidades no nome do campo:** `Cm`, `C` (graus Celsius), `Dias`.
+
+```js
+if (planta.descricao) { /* tem texto */ }
+if (planta.agua.intervaloDias.verao !== null) { /* tem intervalo de rega */ }
+```
+
+## Exemplo completo: manjericão
 
 ```json
 {
-  "id": "alface",
-  "nomePopular": "Alface",
-  "nomeCientifico": "Lactuca sativa",
-  "categoria": "hortalica",
+  "id": "manjericao",
+  "nomePopular": "Manjericão",
+  "nomeCientifico": "Ocimum basilicum",
   "familia": "",
-  "origem": "",
+  "regiaoDeOrigem": "",
+  "categoria": "erva",
 
-  "cultivo": {
-    "luz": "meia-sombra",
-    "rega": "media",
-    "ciclo": "anual",
-    "dificuldade": "facil",
-    "ambiente": ["horta-vertical", "jardineira", "varanda", "vaso"],
-    "maturidadeDias": 50,
-    "germinacaoDias": 5,
-    "alturaCm": 30,
-    "espacamentoCm": 20,
-    "solo": ""
+  "descricao": "Erva anual de folhas largas e muito aromáticas...",
+  "dicas": ["Colha as folhas de cima para baixo, sempre acima de um par de folhas"],
+  "problemasComuns": [
+    { "sintoma": "Folhas amareladas embaixo",
+      "causa": "Excesso de água ou vaso sem furo",
+      "solucao": "Regar só quando o solo secar e usar vaso com furo de drenagem" }
+  ],
+  "imagem": { "arquivo": "imgs/plantas/manjericao.jpg", "autor": "Sune Holt",
+              "licenca": "CC BY-NC", "url": "https://www.inaturalist.org/photos/154769884" },
+
+  "dificuldade": "facil",
+  "ambientes": ["canteiro", "vaso"],
+  "luz": "sol-pleno",
+  "agua": {
+    "necessidade": "media",
+    "intervaloDias": { "primavera": 3, "verao": 3, "outono": 5, "inverno": null },
+    "modo": "por-cima"
   },
-
-  "descricao": "Folhosa de ciclo curto, pronta para colher em cerca de 45 dias...",
-  "dicas": ["Colha folha a folha, de fora para dentro..."],
-  "problemasComuns": ["Planta espigando e ficando amarga: calor demais..."],
-  "imagem": { "arquivo": "img/plantas/alface.jpg", "creditoAutor": "", "licenca": "", "origem": "" },
-
-  "cuidados": { },
-  "referenciaIngles": { },
-  "registrosAgregados": 115,
-  "fonte": { }
+  "solo":  { "ph": "neutro", "drenagem": "bem-drenado" },
+  "clima": { "temperaturaMinC": 18, "temperaturaMaxC": 27, "umidade": "media" },
+  "porte": { "alturaCm": 61, "espacamentoCm": 25, "crescimento": "rapido" },
+  "ciclo": {
+    "tipo": "anual",
+    "anosDeVida": { "min": 1, "max": 1 },
+    "germinacaoDias": 5,
+    "diasAteColheita": 60,
+    "diasAteFloracao": null
+  },
+  "propagacao": ["sementes", "estaquia-de-caule"],
+  "toxicidadePets": "nao-toxica"
 }
 ```
 
@@ -40,98 +67,105 @@ Referência do formato do `Data/Plantas.json`. Exemplo real: a alface.
 
 | Campo | O que é |
 | --- | --- |
-| `id` | chave única, sem acento nem espaço. Use para links e para achar a planta |
+| `id` | chave única, sem acento nem espaço. Use para links e para o nome da foto |
 | `nomePopular` | o nome que aparece na tela |
-| `nomeCientifico` | nome em latim, útil como subtítulo da ficha |
+| `nomeCientifico` | nome em latim, para o subtítulo da ficha |
+| `familia` | família botânica. **Vazio**, para a equipe preencher |
+| `regiaoDeOrigem` | de onde a planta vem (ex.: "Mediterrâneo"). **Vazio**, para preencher |
 | `categoria` | `erva` · `hortalica` · `medicinal` · `ornamental` · `fruta` |
-| `familia` | família botânica. **Vazio**, para preencher se quiserem |
-| `origem` | região de origem. **Vazio**, para preencher |
 
-## cultivo — como plantar
+## Texto e foto
 
-Vem do OpenPlantDB, exceto os dois primeiros calculados.
-
-| Campo | Valores / unidade |
+| Campo | Formato |
 | --- | --- |
+| `descricao` | 1 a 3 frases, com ponto final |
+| `dicas` | lista de frases curtas, sem ponto final |
+| `problemasComuns` | lista de `{ sintoma, causa, solucao }` |
+| `imagem` | `{ arquivo, autor, licenca, url }` ou `null` |
+
+- **`descricao` e `dicas`** estão preenchidas em 194 das 260 plantas: 5 fichas
+  escritas pela equipe (manjericão, alface, babosa, jiboia e morango) e 189
+  traduzidas do plantfolio. As 66 restantes não têm texto de origem e estão
+  vazias, para escrever.
+- **`problemasComuns`** só existe nas 5 fichas de exemplo. Vem separado em
+  sintoma, causa e solução porque o questionário "O que há com a minha
+  planta?" parte do sintoma.
+- **`imagem.arquivo`** é relativo à pasta `Front-end`. A foto é baixada pelo
+  `Scripts/baixar_imagens.py`.
+- **Crédito da foto:** toda foto exibida precisa mostrar `autor` e `licenca`,
+  com link para `url`, que é a página original da foto. As regras completas
+  estão no [LICENCAS.md](LICENCAS.md).
+
+## Para filtros e busca
+
+| Campo | Valores |
+| --- | --- |
+| `dificuldade` | `facil` · `media` · `dificil` (**calculado**) |
+| `ambientes` | lista: `vaso` · `jardineira` · `varanda` · `horta-vertical` · `canteiro` · `interior` (**calculado**) |
 | `luz` | `sol-pleno` · `meia-sombra` · `sombra` |
-| `rega` | `baixa` · `media` · `alta` |
-| `ciclo` | `anual` · `perene` |
-| `dificuldade` | `facil` · `media` · `dificil` — **calculado** |
-| `ambiente` | lista: `vaso` · `jardineira` · `varanda` · `horta-vertical` · `canteiro` · `interior` — **calculado** |
-| `maturidadeDias` | dias até a primeira colheita (ou floração, nas ornamentais) |
-| `germinacaoDias` | dias para a semente brotar |
-| `alturaCm` | altura adulta |
-| `espacamentoCm` | distância entre uma muda e outra |
-| `solo` | **vazio**, para preencher |
 
-`dificuldade` e `ambiente` não existem em banco nenhum: são regras nossas,
-escritas no script. Dificuldade soma pontos por rega alta, ciclo anual longo
-e porte acima de 3 m. Ambiente sai do tamanho da planta.
+`dificuldade` e `ambientes` não vêm de nenhum banco: são regras nossas, no
+`gerar_plantas_json.py`.
+- **`dificuldade`** soma pontos por rega alta, ciclo anual demorado e porte
+  acima de 3 m.
+- **`ambientes`** sai do tamanho da planta.
 
-## Conteúdo escrito por nós
-
-Estes quatro são o texto autoral. Nascem vazios, exceto em cinco plantas de
-exemplo: manjericao, alface, babosa, jiboia e morango.
-
-| Campo | Formato | Vazio vem como |
-| --- | --- | --- |
-| `descricao` | texto de 2 ou 3 períodos | `""` |
-| `dicas` | lista de frases curtas | `[]` |
-| `problemasComuns` | lista no padrão *sintoma: causa e solução* | `[]` |
-| `imagem` | objeto com arquivo, autor, licença e link de origem | `null` |
-
-O padrão sintoma-primeiro em `problemasComuns` é proposital: casa com o
-questionário "O que há com a minha planta?", em que o usuário chega pelo
-sintoma e não pelo nome da praga.
-
-## cuidados — manutenção do dia a dia
-
-Vem do plantfolio. Existe em **193 das 260**; nas outras vem `null`.
+## Cuidados
 
 | Campo | Valores / unidade |
 | --- | --- |
-| `toxicoParaPets` | `nao-toxica` · `levemente-toxica` · `toxica` · `desconhecida` |
-| `regaEmDias` | intervalo em dias por estação: primavera, verao, outono, inverno |
-| `modoDeRegar` | `por-cima` · `por-baixo` · `imersao` · `borrifar` |
-| `temperaturaC` | `{ min, max }` em graus |
-| `umidade` | `baixa` · `media` · `alta` · `muito-alta` |
-| `phSolo` | `acido` · `neutro` · `alcalino` · `adaptavel` |
-| `drenagem` | `bem-drenado` · `drenagem-alta` · `retem-umidade` · `tolera-encharcamento` |
-| `crescimento` | `lento` · `moderado` · `rapido` |
-| `anosDeVida` | `{ min, max }` |
-| `propagacao` | lista: `sementes` · `estaquia-de-caule` · `divisao-de-touceira` · `alporquia` · `mudas-aereas` · e outras |
+| `agua.necessidade` | `baixa` · `media` · `alta` |
+| `agua.intervaloDias` | dias entre regas em cada estação: `primavera`, `verao`, `outono`, `inverno` |
+| `agua.modo` | `por-cima` · `por-baixo` · `imersao` · `borrifar` |
+| `solo.ph` | `acido` · `neutro` · `alcalino` · `adaptavel` |
+| `solo.drenagem` | `bem-drenado` · `drenagem-alta` · `retem-umidade` · `tolera-encharcamento` |
+| `clima.temperaturaMinC`, `clima.temperaturaMaxC` | faixa de temperatura ideal, em °C |
+| `clima.umidade` | umidade do ar: `baixa` · `media` · `alta` · `muito-alta` |
+| `porte.alturaCm` | altura adulta, em cm |
+| `porte.espacamentoCm` | distância entre uma muda e outra, em cm |
+| `porte.crescimento` | `lento` · `moderado` · `rapido` |
+| `propagacao` | lista: `sementes` · `estaquia-de-caule` · `estaquia-de-folha` · `divisao-de-touceira` · `divisao-de-bulbos` · `divisao-de-tuberculos` · `enxertia` · `alporquia` · `mergulhia` · `mudas-laterais` · `mudas-aereas` · `estolhos` · `esporos` |
+| `toxicidadePets` | `nao-toxica` · `levemente-toxica` · `toxica` |
 
-`regaEmDias` é o campo que alimenta o lembrete do Minhas Plantas. Nem toda
-estação aparece: só entram as que o banco tem.
+- **`agua.intervaloDias`** alimenta o lembrete do Minhas Plantas. Uma
+  estação em `null` quer dizer que o banco não informa, e **não** que é
+  para parar de regar. Na falta do inverno, use o intervalo do outono.
+- **Os campos dos cuidados**, exceto `necessidade`, `alturaCm` e
+  `espacamentoCm`, estão em `null` (ou `[]`) nas 67 plantas sem ficha no
+  plantfolio.
 
-## referenciaIngles — NÃO EXIBIR
-
-Texto original em inglês, material de apoio para quem vai escrever a
-descrição e as dicas em português. As frases vêm quebradas em lista, no
-mesmo formato de `dicas`, para reescrever linha a linha.
-
-Conforme forem escrevendo a versão em português, apaguem esse bloco da
-planta. O arquivo encolhe e some o inglês do meio do conteúdo.
-
-## Procedência
+## Ciclo
 
 | Campo | O que é |
 | --- | --- |
-| `registrosAgregados` | quantas variedades daquela espécie foram resumidas nessa ficha (a alface tem 115) |
-| `fonte` | origem dos dados de cultivo, com licença e data |
-
-## Vazios
-
-Nenhum campo desaparece da ficha. Vazio vem como `""`, `[]` ou `null`, então
-não é preciso testar se a chave existe:
-
-```js
-if (planta.descricao) { /* ... */ }
-if (planta.cuidados)  { /* ... */ }
-```
+| `ciclo.tipo` | `anual` · `perene` |
+| `ciclo.anosDeVida` | `{ min, max }`, em anos |
+| `ciclo.germinacaoDias` | dias para a semente brotar |
+| `ciclo.diasAteColheita` | dias do plantio à primeira colheita. Só nas comestíveis; `null` nas ornamentais |
+| `ciclo.diasAteFloracao` | dias do plantio à primeira floração. Só nas ornamentais; `null` nas outras |
 
 ## Bloco meta
 
-No topo do arquivo, antes da lista. Traz as duas fontes, as licenças, quais
-campos vieram de cada uma, quais foram calculados e a ressalva de clima —
-o OpenPlantDB é norte-americano e os valores são faixas de referência.
+- **`licenca`**: licença do arquivo (CC BY-NC-SA 4.0), com link.
+- **`fontes`**: para cada fonte, nome, link, licença e a lista de campos que
+  vieram dela. É o que a página Sobre usa para os créditos.
+- **`ressalva`**: aviso de que os valores de cultivo são faixas de
+  referência.
+
+## De onde vem cada coisa
+
+| Origem | Campos |
+| --- | --- |
+| OpenPlantDB (CC0) | `luz`, `agua.necessidade`, `porte.alturaCm`, `porte.espacamentoCm`, `ciclo.tipo`, `ciclo.germinacaoDias`, `ciclo.diasAteColheita`, `ciclo.diasAteFloracao` |
+| plantfolio (CC BY-NC-SA) | `descricao` e `dicas` traduzidas, e os demais campos de cuidados e ciclo |
+| iNaturalist e Wikimedia Commons | `imagem` (licença própria de cada foto) |
+| Calculado pelo script | `dificuldade`, `ambientes` |
+| Escrito pela equipe | `familia`, `regiaoDeOrigem`, `problemasComuns` e o texto das 5 fichas de exemplo |
+
+## Scripts
+
+- **`python Scripts/gerar_plantas_json.py`** recria o arquivo a partir dos
+  bancos. Ele **preserva** tudo o que foi escrito à mão: `descricao`,
+  `dicas`, `problemasComuns`, `imagem`, `familia` e `regiaoDeOrigem`.
+- **`python Scripts/baixar_imagens.py`** baixa a foto das plantas que ainda
+  não têm uma.

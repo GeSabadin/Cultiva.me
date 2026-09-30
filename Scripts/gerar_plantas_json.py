@@ -418,7 +418,7 @@ NOMES = {
 # do JSON gerado e precisa aparecer também na página "Sobre" do site.
 #
 # Nem toda planta é encontrada: o plantfolio tem 952 fichas por gênero, não
-# por espécie. Quem não casar simplesmente fica sem o bloco "cuidados".
+# por espécie. Quem não casar fica com esses campos em null.
 
 ARQUIVO_PLANTFOLIO = PASTA_DO_SCRIPT / "_plantfolio.json"
 
@@ -427,7 +427,7 @@ URL_PLANTFOLIO = ("https://raw.githubusercontent.com/Luminoid/"
 
 # Tradução dos valores. O banco usa palavras fixas em inglês.
 TOXICIDADE = {"toxic": "toxica", "mildlyToxic": "levemente-toxica",
-              "nonToxic": "nao-toxica", "unknown": "desconhecida"}
+              "nonToxic": "nao-toxica"}          # "unknown" vira null: sem dado
 
 UMIDADE = {"low": "baixa", "medium": "media", "high": "alta",
            "veryHigh": "muito-alta"}
@@ -483,64 +483,51 @@ def indexar_plantfolio(fichas):
     return indice
 
 
-def montar_referencia(ficha):
-    """Traz o texto original em inglês do plantfolio, como apoio.
+def ler_plantfolio(ficha):
+    """Pega da ficha do plantfolio os valores que usamos, já traduzidos.
 
-    NÃO é para exibir no site: é matéria-prima para quem vai escrever a
-    descrição e as dicas em português. O careTips vem quebrado em frases,
-    no mesmo formato da lista "dicas", para facilitar a reescrita linha a
-    linha.
+    Planta sem ficha recebe tudo None: assim toda planta tem as mesmas chaves
+    no JSON, e "sem dado" é sempre null.
+
+    O texto em inglês (description e careTips) NÃO entra no JSON. Ele foi
+    traduzido para descricao e dicas. Para uma planta nova, leia o texto
+    original no próprio plantfolio e escreva a versão em português.
     """
-    if not ficha:
-        return None
-
-    texto_dicas = ficha.get("careTips") or ""
-    frases = [f.strip() for f in re.split(r"(?<=[.!?])\s+", texto_dicas) if f.strip()]
-
-    return {
-        "descricao": ficha.get("description") or "",
-        "dicas": frases,
-        "fonte": "plantfolio-common-plants (CC BY-NC-SA 4.0)",
-    }
-
-
-def montar_cuidados(ficha):
-    """Traduz a ficha do plantfolio para o formato do nosso JSON."""
-    if not ficha:
-        return None
-
-    rega_por_estacao = {
-        "primavera": ficha.get("springInterval"),
-        "verao": ficha.get("summerInterval"),
-        "outono": ficha.get("fallInterval"),
-        "inverno": ficha.get("winterInterval"),
-    }
-    # só mantém as estações que têm valor
-    rega_por_estacao = {k: v for k, v in rega_por_estacao.items() if v}
-
+    ficha = ficha or {}
     temperatura = ficha.get("temperaturePreference") or []
     tempo_de_vida = ficha.get("plantLifeSpan") or []
-
+    if len(temperatura) != 2:
+        temperatura = [None, None]
+    if len(tempo_de_vida) != 2:
+        tempo_de_vida = [None, None]
     return {
-        "toxicoParaPets": TOXICIDADE.get(ficha.get("plantToxicity")),
-        "regaEmDias": rega_por_estacao,
-        "modoDeRegar": MODO_DE_REGAR.get(ficha.get("wateringMethod")),
-        "temperaturaC": {"min": temperatura[0], "max": temperatura[1]} if len(temperatura) == 2 else None,
-        "umidade": UMIDADE.get(ficha.get("humidityPreference")),
-        "phSolo": PH_SOLO.get(ficha.get("soilPhPreference")),
+        "intervaloDias": {
+            "primavera": ficha.get("springInterval") or None,
+            "verao": ficha.get("summerInterval") or None,
+            "outono": ficha.get("fallInterval") or None,
+            "inverno": ficha.get("winterInterval") or None,
+        },
+        "modo": MODO_DE_REGAR.get(ficha.get("wateringMethod")),
+        "ph": PH_SOLO.get(ficha.get("soilPhPreference")),
         "drenagem": DRENAGEM.get(ficha.get("drainagePreference")),
+        "temperaturaMinC": temperatura[0],
+        "temperaturaMaxC": temperatura[1],
+        "umidade": UMIDADE.get(ficha.get("humidityPreference")),
         "crescimento": CRESCIMENTO.get(ficha.get("growthRate")),
-        "anosDeVida": {"min": tempo_de_vida[0], "max": tempo_de_vida[1]} if len(tempo_de_vida) == 2 else None,
+        "anosDeVida": {"min": tempo_de_vida[0], "max": tempo_de_vida[1]},
         "propagacao": [PROPAGACAO.get(m, m) for m in (ficha.get("propagationMethods") or [])],
-        "fonte": "plantfolio-common-plants (CC BY-NC-SA 4.0)",
+        "toxicidadePets": TOXICIDADE.get(ficha.get("plantToxicity")),
     }
 
 
 # =============================================================================
 # 4. EXEMPLOS DE PREENCHIMENTO
 # =============================================================================
-# Descrição, dicas, problemas e imagem NÃO existem no banco de dados. É o
-# conteúdo escrito por nós.
+# Descrição, dicas e problemas NÃO existem no OpenPlantDB. É o conteúdo
+# escrito por nós (a foto vem do Scripts/baixar_imagens.py).
+#
+# Cada problema comum tem sintoma, causa e solução separados: o questionário
+# "O que há com a minha planta?" parte do sintoma.
 #
 # Abaixo tem um exemplo pronto de cada categoria, só para servir de modelo de
 # formato. REESCREVAM COM AS PALAVRAS DE VOCÊS: esses textos foram gerados
@@ -566,16 +553,22 @@ EXEMPLOS = {
             "Regue pela manhã e evite molhar as folhas, que mancham com facilidade",
         ],
         "problemasComuns": [
-            "Folhas amareladas embaixo: geralmente excesso de água ou vaso sem furo",
-            "Caule esticado e folhas pequenas: falta de luz, precisa de mais sol direto",
-            "Pontinhos brancos no verso da folha: pulgão, tratar com água e sabão neutro",
+            {
+                "sintoma": "Folhas amareladas embaixo",
+                "causa": "Excesso de água ou vaso sem furo",
+                "solucao": "Regar só quando o solo secar e usar vaso com furo de drenagem",
+            },
+            {
+                "sintoma": "Caule esticado e folhas pequenas",
+                "causa": "Falta de luz",
+                "solucao": "Levar para um lugar com mais sol direto",
+            },
+            {
+                "sintoma": "Pontinhos brancos no verso da folha",
+                "causa": "Pulgão",
+                "solucao": "Tratar com água e sabão neutro",
+            },
         ],
-        "imagem": {
-            "arquivo": "img/plantas/manjericao.jpg",
-            "creditoAutor": "",
-            "licenca": "",
-            "origem": "",
-        },
     },
 
     # ---- categoria: hortalica ----
@@ -591,16 +584,22 @@ EXEMPLOS = {
             "Semeie um vaso novo a cada duas semanas para ter colheita contínua",
         ],
         "problemasComuns": [
-            "Planta espigando e ficando amarga: calor demais, mude para local mais fresco",
-            "Folhas com furos: lesmas ou lagartas, revistar o verso das folhas à noite",
-            "Crescimento parado e folhas pálidas: substrato pobre, falta adubação",
+            {
+                "sintoma": "Planta espigando e ficando amarga",
+                "causa": "Calor demais",
+                "solucao": "Mudar para um local mais fresco",
+            },
+            {
+                "sintoma": "Folhas com furos",
+                "causa": "Lesmas ou lagartas",
+                "solucao": "Revistar o verso das folhas à noite e retirar os bichos",
+            },
+            {
+                "sintoma": "Crescimento parado e folhas pálidas",
+                "causa": "Substrato pobre",
+                "solucao": "Adubar",
+            },
         ],
-        "imagem": {
-            "arquivo": "img/plantas/alface.jpg",
-            "creditoAutor": "",
-            "licenca": "",
-            "origem": "",
-        },
     },
 
     # ---- categoria: medicinal ----
@@ -616,16 +615,22 @@ EXEMPLOS = {
             "As mudas que nascem ao redor podem ser separadas e replantadas",
         ],
         "problemasComuns": [
-            "Folhas moles e escurecidas na base: excesso de água, principal causa de morte",
-            "Folhas finas e enrugadas: aí sim está faltando água",
-            "Manchas marrons nas pontas: sol forte demais logo após mudança de local",
+            {
+                "sintoma": "Folhas moles e escurecidas na base",
+                "causa": "Excesso de água, principal causa de morte da babosa",
+                "solucao": "Deixar o substrato secar por completo entre as regas",
+            },
+            {
+                "sintoma": "Folhas finas e enrugadas",
+                "causa": "Falta de água",
+                "solucao": "Regar bem e esperar secar antes da próxima rega",
+            },
+            {
+                "sintoma": "Manchas marrons nas pontas",
+                "causa": "Sol forte demais logo após mudança de local",
+                "solucao": "Acostumar a planta ao sol aos poucos",
+            },
         ],
-        "imagem": {
-            "arquivo": "img/plantas/babosa.jpg",
-            "creditoAutor": "",
-            "licenca": "",
-            "origem": "",
-        },
     },
 
     # ---- categoria: ornamental ----
@@ -641,16 +646,22 @@ EXEMPLOS = {
             "Podar os ramos mais longos deixa a planta mais cheia em vez de comprida",
         ],
         "problemasComuns": [
-            "Folhas amarelas: quase sempre água demais, deixe o substrato secar",
-            "Folhas novas pequenas e sem manchas claras: falta de luz",
-            "Pontas marrons e secas: ar muito seco, borrife água nas folhas",
+            {
+                "sintoma": "Folhas amarelas",
+                "causa": "Quase sempre água demais",
+                "solucao": "Deixar o substrato secar antes de regar de novo",
+            },
+            {
+                "sintoma": "Folhas novas pequenas e sem manchas claras",
+                "causa": "Falta de luz",
+                "solucao": "Levar para um lugar mais claro, sem sol direto forte",
+            },
+            {
+                "sintoma": "Pontas marrons e secas",
+                "causa": "Ar muito seco",
+                "solucao": "Borrifar água nas folhas",
+            },
         ],
-        "imagem": {
-            "arquivo": "img/plantas/jiboia.jpg",
-            "creditoAutor": "",
-            "licenca": "",
-            "origem": "",
-        },
     },
 
     # ---- categoria: fruta ----
@@ -666,16 +677,22 @@ EXEMPLOS = {
             "Precisa de pelo menos cinco horas de sol direto para dar fruto",
         ],
         "problemasComuns": [
-            "Frutos mofados antes de amadurecer: umidade demais e pouca ventilação",
-            "Muita folha e nenhum fruto: excesso de adubo com nitrogênio",
-            "Frutos pequenos e deformados: falta de polinização ou planta velha demais",
+            {
+                "sintoma": "Frutos mofados antes de amadurecer",
+                "causa": "Umidade demais e pouca ventilação",
+                "solucao": "Afastar os frutos da terra e deixar o ar circular",
+            },
+            {
+                "sintoma": "Muita folha e nenhum fruto",
+                "causa": "Excesso de adubo com nitrogênio",
+                "solucao": "Reduzir a adubação nitrogenada",
+            },
+            {
+                "sintoma": "Frutos pequenos e deformados",
+                "causa": "Falta de polinização ou planta velha demais",
+                "solucao": "Atrair polinizadores ou renovar a planta pelas mudas dos estolhos",
+            },
         ],
-        "imagem": {
-            "arquivo": "img/plantas/morango.jpg",
-            "creditoAutor": "",
-            "licenca": "",
-            "origem": "",
-        },
     },
 }
 
@@ -809,6 +826,52 @@ def primeiro_preenchido(*valores):
     return None
 
 
+def montar_meta():
+    """Cabeçalho do JSON: licença e de onde veio cada campo (para a página Sobre).
+
+    As regras de cada campo estão no Data/Campos.MD, não aqui.
+    """
+    return {
+        "projeto": "Cultiva.me",
+        "geradoEm": date.today().isoformat(),
+        "licenca": {
+            "nome": "CC BY-NC-SA 4.0",
+            "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt-br",
+        },
+        "fontes": [
+            {
+                "nome": "OpenPlantDB",
+                "url": "https://github.com/cwfrazier1/openplantdb",
+                "licenca": "CC0 1.0",
+                "campos": ["luz", "agua.necessidade", "porte.alturaCm",
+                           "porte.espacamentoCm", "ciclo.tipo", "ciclo.germinacaoDias",
+                           "ciclo.diasAteColheita", "ciclo.diasAteFloracao"],
+            },
+            {
+                "nome": "plantfolio-common-plants",
+                "url": "https://github.com/Luminoid/plantfolio-common-plants",
+                "licenca": "CC BY-NC-SA 4.0",
+                "campos": ["descricao", "dicas", "agua.intervaloDias", "agua.modo",
+                           "solo.ph", "solo.drenagem", "clima.temperaturaMinC",
+                           "clima.temperaturaMaxC", "clima.umidade",
+                           "porte.crescimento", "ciclo.anosDeVida", "propagacao",
+                           "toxicidadePets"],
+                "observacao": ("descricao e dicas são tradução adaptada do texto "
+                               "original, exceto nas fichas escritas pela equipe"),
+            },
+            {
+                "nome": "iNaturalist e Wikimedia Commons",
+                "url": "https://www.inaturalist.org",
+                "licenca": "varia por foto, ver imagem.licenca",
+                "campos": ["imagem"],
+            },
+        ],
+        "ressalva": ("Os valores de cultivo são faixas de referência de bancos "
+                     "estrangeiros e variam com a variedade, a região e o "
+                     "microclima."),
+    }
+
+
 # =============================================================================
 # 8. O PROGRAMA
 # =============================================================================
@@ -858,26 +921,16 @@ def main():
         espacamento = polegadas_para_cm(numero_do_meio(
             [(v.get("spacing_in") or {}).get("min") for v in variedades]))
 
+        pf = ler_plantfolio(cuidados_por_especie.get(nome_cientifico))
+        ornamental = categoria == "ornamental"
+
         plantas.append({
             "id": planta_id,
             "nomePopular": nome_portugues,
             "nomeCientifico": (variedades[0].get("scientific_name") or "").split("'")[0].strip(),
-            "categoria": categoria,
             "familia": antes.get("familia", ""),
-            "origem": antes.get("origem", ""),
-
-            "cultivo": {
-                "luz": luz,
-                "rega": agua,
-                "ciclo": ciclo,
-                "dificuldade": calcular_dificuldade(agua, ciclo, dias_ate_colher, altura),
-                "ambiente": calcular_ambiente(categoria, luz, altura, largura),
-                "maturidadeDias": dias_ate_colher,
-                "germinacaoDias": dias_para_germinar,
-                "alturaCm": altura,
-                "espacamentoCm": espacamento,
-                "solo": (antes.get("cultivo") or {}).get("solo", ""),
-            },
+            "regiaoDeOrigem": antes.get("regiaoDeOrigem", ""),
+            "categoria": categoria,
 
             # escrito por nós: o que já estava no arquivo vem primeiro
             "descricao": primeiro_preenchido(
@@ -886,19 +939,38 @@ def main():
                 antes.get("dicas"), exemplo.get("dicas")) or [],
             "problemasComuns": primeiro_preenchido(
                 antes.get("problemasComuns"), exemplo.get("problemasComuns")) or [],
-            "imagem": primeiro_preenchido(
-                antes.get("imagem"), exemplo.get("imagem")),
+            "imagem": antes.get("imagem"),          # preenchida pelo baixar_imagens.py
 
-            "cuidados": montar_cuidados(cuidados_por_especie.get(nome_cientifico)),
-            "referenciaIngles": montar_referencia(cuidados_por_especie.get(nome_cientifico)),
-
-            "registrosAgregados": len(variedades),
-            "fonte": {
-                "referencia": "OpenPlantDB",
-                "url": "https://github.com/cwfrazier1/openplantdb",
-                "licenca": "CC0 1.0 (domínio público)",
-                "dataConsulta": date.today().isoformat(),
+            "dificuldade": calcular_dificuldade(agua, ciclo, dias_ate_colher, altura),
+            "ambientes": calcular_ambiente(categoria, luz, altura, largura),
+            "luz": luz,
+            "agua": {
+                "necessidade": agua,
+                "intervaloDias": pf["intervaloDias"],
+                "modo": pf["modo"],
             },
+            "solo": {"ph": pf["ph"], "drenagem": pf["drenagem"]},
+            "clima": {
+                "temperaturaMinC": pf["temperaturaMinC"],
+                "temperaturaMaxC": pf["temperaturaMaxC"],
+                "umidade": pf["umidade"],
+            },
+            "porte": {
+                "alturaCm": altura,
+                "espacamentoCm": espacamento,
+                "crescimento": pf["crescimento"],
+            },
+            "ciclo": {
+                "tipo": ciclo,
+                "anosDeVida": pf["anosDeVida"],
+                "germinacaoDias": dias_para_germinar,
+                # o OpenPlantDB mede "maturidade": colheita nas comestíveis,
+                # primeira floração nas ornamentais. Aqui vira dois campos.
+                "diasAteColheita": None if ornamental else dias_ate_colher,
+                "diasAteFloracao": dias_ate_colher if ornamental else None,
+            },
+            "propagacao": pf["propagacao"],
+            "toxicidadePets": pf["toxicidadePets"],
         })
 
     # planta que saiu da curadoria mas está no arquivo: fica, não some
@@ -907,49 +979,7 @@ def main():
     plantas.extend(herdadas)
     plantas.sort(key=lambda p: p.get("nomePopular", ""))
 
-    arquivo = {
-        "meta": {
-            "projeto": "Cultiva.me",
-            "geradoEm": date.today().isoformat(),
-            "totalPlantas": len(plantas),
-            "licencaDesteArquivo": "CC BY-NC-SA 4.0",
-            "fontes": [
-                {
-                    "nome": "OpenPlantDB",
-                    "url": "https://github.com/cwfrazier1/openplantdb",
-                    "licenca": "CC0 1.0 (domínio público)",
-                    "campos": "luz, rega, ciclo, maturidade, germinação, altura, espaçamento",
-                },
-                {
-                    "nome": "plantfolio-common-plants",
-                    "url": "https://github.com/Luminoid/plantfolio-common-plants",
-                    "licenca": "CC BY-NC-SA 4.0",
-                    "campos": ("tudo dentro dos blocos cuidados e "
-                               "referenciaIngles"),
-                    "obrigacoes": ("creditar a fonte, uso não comercial e "
-                                   "distribuir sob a mesma licença"),
-                },
-            ],
-            "camposDoBanco": ["luz", "rega", "ciclo", "maturidadeDias",
-                              "germinacaoDias", "alturaCm", "espacamentoCm"],
-            "camposCalculados": {
-                "dificuldade": "a partir da rega, do ciclo e da altura",
-                "ambiente": "a partir da altura e da largura da planta",
-            },
-            "camposEscritosPorNos": ["descricao", "dicas", "problemasComuns",
-                                     "imagem", "familia", "origem", "solo"],
-            "notaReferenciaIngles": ("referenciaIngles é material de apoio para "
-                                     "escrever o conteúdo em português. Não deve "
-                                     "ser exibido no site."),
-            "notaMaturidade": ("maturidadeDias é o tempo até a primeira colheita "
-                               "nas comestíveis e até a primeira floração nas "
-                               "ornamentais."),
-            "ressalva": ("O OpenPlantDB é norte-americano. Os valores são faixas "
-                         "publicadas e variam com a variedade, a região e o "
-                         "microclima."),
-        },
-        "plantas": plantas,
-    }
+    arquivo = {"meta": montar_meta(), "plantas": plantas}
 
     ARQUIVO_SAIDA.parent.mkdir(parents=True, exist_ok=True)
     ARQUIVO_SAIDA.write_text(
@@ -960,10 +990,8 @@ def main():
     for categoria, quantas in Counter(p["categoria"] for p in plantas).most_common():
         print(f"  {categoria:12} {quantas:3}")
 
-    com_cuidados = sum(1 for p in plantas if p.get("cuidados"))
-    com_referencia = sum(1 for p in plantas if p.get("referenciaIngles"))
+    com_cuidados = sum(1 for p in plantas if p["agua"]["modo"] or p["toxicidadePets"])
     print(f"\n  com dados de cuidado (plantfolio): {com_cuidados} de {len(plantas)}")
-    print(f"  com texto de apoio em inglês:      {com_referencia} de {len(plantas)}")
 
     com_texto = sum(1 for p in plantas if p.get("descricao"))
     print(f"\n  com descrição escrita: {com_texto} de {len(plantas)}")
