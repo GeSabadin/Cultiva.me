@@ -1,0 +1,149 @@
+/* style.css */
+
+/* Definição da Paleta de Cores */
+:root {
+    --beige: #E5ECD9;
+    --olive-wood: #765E43;
+    --olive-leaf: #4A6226;
+    --fern: #5A703A;
+    --olive-leaf-dark: #3A4A22;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #fafafa;
+    color: #333;
+}
+
+/* Cabeçalho e Navegação */
+header {
+    background-color: var(--olive-leaf);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.menu a:hover {
+    color: var(--beige);
+    text-decoration: underline;
+}
+
+/* Estrutura Principal */
+main {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Carrossel */
+.carrossel {
+    background-color: var(--beige);
+    color: var(--olive-leaf-dark);
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--fern);
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Destaques e Cartões */
+.destaques {
+    text-align: center;
+}
+
+.destaques h2 {
+    margin-bottom: 1rem;
+    color: var(--olive-leaf-dark);
+}
+
+.cards-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.card {
+    background-color: white;
+    border: 1px solid var(--olive-wood);
+    border-top: 5px solid var(--olive-leaf);
+    padding: 2rem;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    color: var(--olive-leaf-dark);
+    margin-bottom: 0.5rem;
+}
+
+/* Curiosidades */
+.curiosidades {
+    background-color: var(--fern);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.curiosidades h2 {
+    margin-bottom: 0.5rem;
+}
+
+/* Rodapé */
+footer {
+    background-color: var(--olive-leaf-dark);
+    color: var(--beige);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
