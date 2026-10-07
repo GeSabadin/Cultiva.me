@@ -97,22 +97,47 @@ main {
     color: var(--olive-leaf-dark);
 }
 
+.busca-plantas {
+    display: block;
+    margin: 0 auto 0.5rem;
+    max-width: 480px;
+    text-align: left;
+}
+
+#busca-plantas {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto 1rem;
+    padding: 0.75rem;
+    border: 1px solid var(--fern);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+#status-plantas {
+    margin-bottom: 1rem;
+}
+
 .cards-container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
+    text-align: left;
 }
 
 .card {
     background-color: white;
     border: 1px solid var(--olive-wood);
-    border-top: 5px solid var(--olive-leaf);
-    padding: 2rem;
-    flex: 1;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     transition: transform 0.2s;
+}
+
+.card > h3,
+.card > p:not(.credito-imagem) {
+    margin: 0.75rem 1rem;
 }
 
 .card:hover {
@@ -121,7 +146,26 @@ main {
 
 .card h3 {
     color: var(--olive-leaf-dark);
-    margin-bottom: 0.5rem;
+}
+
+.planta-imagem {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.credito-imagem {
+    margin: 0.5rem 1rem;
+    font-size: 0.75rem;
+}
+
+.credito-imagem a {
+    color: var(--olive-leaf-dark);
+}
+
+.nome-cientifico {
+    font-style: italic;
 }
 
 /* Curiosidades */
