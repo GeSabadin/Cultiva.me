@@ -3,6 +3,27 @@
 > **Antes de publicar ou mexer nas fotos, leia o [LICENCAS.md](LICENCAS.md).**
 > Ele lista o que o site precisa cumprir para usar os dados e as fotos.
 
+## Como visualizar as plantas na página inicial
+
+1. Abra a pasta raiz do projeto (`Cultiva_Atualizado`) no VS Code. Ela precisa
+   conter as pastas `Data` e `Front-end`.
+2. Inicie um servidor local, como **Live Server** ou **Five Server**. No
+   Explorer do VS Code, abra `Front-end/pages/index.html` e use o comando
+   **Open with Live Server** ou **Open with Five Server**.
+3. A página carrega as fichas de `Data/Plantas.json` e mostra os cartões na
+   seção **Plantas do catálogo**. Use a busca para filtrar por nome popular,
+   nome científico ou categoria.
+
+Não abra `index.html` diretamente pelo sistema de arquivos (`file://`): os
+navegadores bloqueiam o carregamento do JSON nesse modo. O servidor local deve
+ser iniciado com a raiz do projeto aberta; se for iniciado dentro de
+`Front-end/pages`, o caminho para `Data/Plantas.json` não estará disponível.
+
+O carregamento é feito por `Front-end/pages/index.js`, e as imagens usam os
+caminhos relativos da pasta `Front-end`. Se o catálogo não aparecer, confira
+que o servidor está ativo, que a URL da página começa com `http://` ou
+`https://` e que `Data/Plantas.json` pode ser aberto pelo mesmo servidor.
+
 Referência do formato do `Data/Plantas.json`. O arquivo tem dois blocos:
 `meta` (licença e fontes) e `plantas` (a lista de 260 fichas).
 
