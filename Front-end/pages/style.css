@@ -32,7 +32,7 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-nav {
+header nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -148,6 +148,15 @@ main {
     color: var(--olive-leaf-dark);
 }
 
+.card h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.card h3 a:hover {
+    text-decoration: underline;
+}
+
 .planta-imagem {
     display: block;
     width: 100%;
@@ -180,6 +189,83 @@ main {
 
 .curiosidades h2 {
     margin-bottom: 0.5rem;
+}
+
+/* Ficha da planta */
+.breadcrumb {
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--olive-leaf);
+}
+
+.ficha-topo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.ficha-foto {
+    flex: 1 1 280px;
+}
+
+.ficha-foto img {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.ficha-foto .credito-imagem {
+    margin: 0.5rem 0;
+}
+
+.ficha-info {
+    flex: 2 1 300px;
+}
+
+.ficha-info h2 {
+    color: var(--olive-leaf-dark);
+}
+
+.ficha-info p {
+    margin-top: 0.75rem;
+    line-height: 1.5;
+}
+
+.ficha-quadro {
+    flex: 1 1 220px;
+    background-color: var(--beige);
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.ficha-quadro dt {
+    font-weight: bold;
+    color: var(--olive-leaf-dark);
+}
+
+.ficha-quadro dd {
+    margin-bottom: 0.75rem;
+}
+
+.ficha-dicas h3 {
+    color: var(--olive-leaf-dark);
+    margin-bottom: 0.75rem;
+}
+
+.ficha-dicas ul {
+    padding-left: 1.5rem;
+    line-height: 1.6;
+}
+
+.aviso {
+    font-style: italic;
+    color: var(--olive-wood);
 }
 
 /* Rodapé */

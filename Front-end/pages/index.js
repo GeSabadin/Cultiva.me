@@ -11,6 +11,7 @@ function normalizarTexto(texto) {
 function criarCartao(planta) {
     const cartao = document.createElement("article");
     cartao.className = "card";
+    const enderecoFicha = `planta.html?id=${planta.id}`;
 
     if (planta.imagem && planta.imagem.arquivo) {
         const imagem = document.createElement("img");
@@ -18,7 +19,11 @@ function criarCartao(planta) {
         imagem.src = `../${planta.imagem.arquivo}`;
         imagem.alt = `Foto de ${planta.nomePopular}`;
         imagem.loading = "lazy";
-        cartao.append(imagem);
+        
+        const linkImagem = document.createElement("a");
+        linkImagem.href = enderecoFicha;
+        linkImagem.append(imagem);
+        cartao.append(linkImagem);
 
         if (planta.imagem.autor && planta.imagem.licenca && planta.imagem.url) {
             const credito = document.createElement("p");
@@ -34,7 +39,10 @@ function criarCartao(planta) {
     }
 
     const nome = document.createElement("h3");
-    nome.textContent = planta.nomePopular;
+    const linkNome = document.createElement("a");
+    linkNome.href = enderecoFicha;
+    linkNome.textContent = planta.nomePopular;
+    nome.append(linkNome);
     cartao.append(nome);
 
     if (planta.nomeCientifico) {
