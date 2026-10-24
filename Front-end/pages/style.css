@@ -177,6 +177,37 @@ main {
     font-style: italic;
 }
 
+.sobre {
+    display: block;
+}
+
+.sobre h2 {
+    margin: 1.5rem 0 0.5rem;
+    color: var(--olive-leaf-dark);
+}
+
+.sobre ul {
+    margin-left: 1.5rem;
+}
+
+.botao-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.botao {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--olive-leaf);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.botao:hover {
+    background-color: var(--olive-leaf-dark);
+}
+
 /* Curiosidades */
 .curiosidades {
     background-color: var(--fern);

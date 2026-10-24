@@ -9,9 +9,15 @@ function mostrar(listaDePlantas) {
     lista.innerHTML = "";
 
     for (const planta of listaDePlantas) {
+        let foto = "";
+        if (planta.imagem && planta.imagem.arquivo) {
+            foto = `<img class="planta-imagem" src="../${planta.imagem.arquivo}" alt="Foto de ${planta.nomePopular}">`;
+        }
+
         lista.innerHTML += `
             <article class="card">
-                <h3>${planta.nomePopular}</h3>
+                ${foto}
+                <h3><a href="planta.html?id=${planta.id}">${planta.nomePopular}</a></h3>
                 <p>${planta.descricao || ""}</p>
             </article>
         `;

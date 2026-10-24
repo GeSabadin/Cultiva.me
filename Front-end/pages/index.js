@@ -1,12 +1,7 @@
 const containerPlantas = document.getElementById("plantas-container");
-const buscaPlantas = document.getElementById("busca-plantas");
 const statusPlantas = document.getElementById("status-plantas");
 const urlCatalogo = new URL("../../Data/Plantas.json", document.currentScript.src);
 let plantas = [];
-
-function normalizarTexto(texto) {
-    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
 
 function criarCartao(planta) {
     const cartao = document.createElement("article");
@@ -61,22 +56,12 @@ function criarCartao(planta) {
     return cartao;
 }
 
-function mostrarPlantas(filtro = "") {
-    const termo = normalizarTexto(filtro.trim());
-    const plantasFiltradas = plantas.filter((planta) => {
-        const textoBusca = normalizarTexto(
-            `${planta.nomePopular} ${planta.nomeCientifico || ""} ${planta.categoria || ""}`
-        );
-        return textoBusca.includes(termo);
-    });
+function mostrarPlantas() {
+    const destaques = plantas.slice(0, 8);
 
-    containerPlantas.replaceChildren(...plantasFiltradas.map(criarCartao));
-    statusPlantas.textContent = plantasFiltradas.length
-        ? `${plantasFiltradas.length} planta(s) encontrada(s).`
-        : "Nenhuma planta encontrada.";
+    containerPlantas.replaceChildren(...destaques.map(criarCartao));
+    statusPlantas.textContent = "";
 }
-
-buscaPlantas.addEventListener("input", () => mostrarPlantas(buscaPlantas.value));
 
 if (window.location.protocol === "file:") {
     statusPlantas.textContent =
@@ -94,7 +79,7 @@ if (window.location.protocol === "file:") {
                 throw new Error("O arquivo Plantas.json não contém uma lista de plantas válida.");
             }
             plantas = dados.plantas;
-            mostrarPlantas(buscaPlantas.value);
+            mostrarPlantas();
         })
         .catch((erro) => {
             console.error(erro);
