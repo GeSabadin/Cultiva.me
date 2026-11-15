@@ -7,6 +7,7 @@
     --olive-leaf: #4A6226;
     --fern: #5A703A;
     --olive-leaf-dark: #3A4A22;
+    --sun: #D9A441;
 }
 
 * {
@@ -28,37 +29,132 @@ body {
 header {
     background-color: var(--olive-leaf);
     color: white;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem clamp(1rem, 4vw, 2rem);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
 }
 
 header nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
-    font-size: 1.5rem;
+    color: var(--beige);
+    font-size: 1.6rem;
     font-weight: bold;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.logo:hover {
+    color: white;
+    transform: translateY(-1px);
 }
 
 .menu {
     list-style: none;
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 0.3rem;
 }
 
-.menu a {
+.menu a,
+.menu-dropdown summary {
+    display: block;
+    padding: 0.65rem 0.85rem;
+    border-radius: 6px;
     color: white;
     text-decoration: none;
     font-size: 0.9rem;
-    transition: color 0.3s;
+    font-weight: 600;
+    transition: color 0.2s, background-color 0.2s;
 }
 
-.menu a:hover {
-    color: var(--beige);
-    text-decoration: underline;
+.menu a:hover,
+.menu-dropdown summary:hover,
+.menu-dropdown[open] > summary {
+    color: var(--olive-leaf-dark);
+    background-color: var(--beige);
+}
+
+.menu-dropdown {
+    position: relative;
+}
+
+.menu-dropdown summary {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.menu-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.menu-dropdown summary::after {
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: 0.55rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    content: "";
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.2s;
+}
+
+.menu-dropdown[open] summary::after {
+    transform: translateY(2px) rotate(225deg);
+}
+
+.submenu {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    z-index: 10;
+    display: grid;
+    min-width: 200px;
+    gap: 0.2rem;
+    padding: 0.4rem;
+    list-style: none;
+    background-color: white;
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.submenu a {
+    color: var(--olive-leaf-dark);
+    font-weight: 500;
+}
+
+.submenu a:hover {
+    color: var(--olive-leaf-dark);
+    background-color: var(--beige);
+}
+
+.logo:focus-visible,
+.menu a:focus-visible,
+.menu-dropdown summary:focus-visible {
+    outline: 3px solid var(--beige);
+    outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+    header nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .menu {
+        flex-wrap: wrap;
+    }
 }
 
 /* Estrutura Principal */
@@ -73,18 +169,74 @@ main {
     width: 100%;
 }
 
-/* Carrossel */
-.carrossel {
+/* Dicas, recomendações e conteúdo para iniciantes */
+.dicas-iniciais {
     background-color: var(--beige);
     color: var(--olive-leaf-dark);
-    height: 250px;
+    padding: 2rem;
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+}
+
+.dicas-iniciais h2,
+.dicas-intro {
+    text-align: center;
+}
+
+.dicas-iniciais h2 {
+    margin-bottom: 0.5rem;
+}
+
+.dicas-intro {
+    margin-bottom: 1.5rem;
+}
+
+.dicas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.dica-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    padding: 1.25rem;
+    background-color: white;
     border: 1px solid var(--fern);
-    text-align: center;
     border-radius: 8px;
+}
+
+.dica-tipo {
+    margin-bottom: 0.5rem;
+    color: var(--olive-leaf);
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.dica-card h3 {
+    margin-bottom: 0.75rem;
+    color: var(--olive-leaf-dark);
+}
+
+.dica-card p,
+.dica-card ol {
+    line-height: 1.5;
+}
+
+.dica-card ol {
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+}
+
+.dica-card li + li {
+    margin-top: 0.4rem;
+}
+
+.dica-link {
+    align-self: center;
+    margin-top: auto;
 }
 
 /* Destaques e Cartões */
@@ -97,26 +249,128 @@ main {
     color: var(--olive-leaf-dark);
 }
 
-.busca-plantas {
-    display: block;
-    margin: 0 auto 0.5rem;
-    max-width: 480px;
+.destaques > h1 {
+    margin-bottom: 0.5rem;
+    color: var(--olive-leaf-dark);
+}
+
+.texto-busca {
+    margin-bottom: 1.25rem;
+}
+
+.painel-filtros {
+    max-width: 1000px;
+    margin: 1.25rem auto;
     text-align: left;
 }
 
-#busca-plantas {
+.painel-filtros > summary {
+    padding: 0.85rem 1rem;
+    color: var(--olive-leaf-dark);
+    background-color: var(--beige);
+    border: 1px solid var(--fern);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#filtros-plantas {
+    padding: 1rem;
+    background-color: #f7f8f3;
+    border: 1px solid var(--fern);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+}
+
+.campo-busca {
+    display: block;
+    max-width: 1000px;
+    margin: 0 auto 1.25rem;
+    text-align: left;
+}
+
+.campo-busca label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--olive-leaf-dark);
+    font-weight: bold;
+}
+
+#busca {
     display: block;
     width: 100%;
-    max-width: 480px;
-    margin: 0 auto 1rem;
+    max-width: none;
+    margin: 0;
     padding: 0.75rem;
     border: 1px solid var(--fern);
     border-radius: 6px;
     font-size: 1rem;
 }
 
+.grupo-filtros {
+    min-width: 0;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+}
+
+.grupo-filtros legend {
+    padding: 0 0.4rem;
+    color: var(--olive-leaf-dark);
+    font-weight: bold;
+}
+
+.filtros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.9rem;
+}
+
+.filtros-grid > label {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.filtros-grid select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.65rem;
+    border: 1px solid var(--fern);
+    border-radius: 6px;
+    background-color: white;
+    font-size: 0.95rem;
+}
+
+.limpar-filtros {
+    margin-top: 1rem;
+    border: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.painel-filtros summary:focus-visible,
+#busca:focus-visible,
+.filtros-grid select:focus-visible,
+.limpar-filtros:focus-visible {
+    outline: 3px solid var(--olive-leaf);
+    outline-offset: 2px;
+}
+
 #status-plantas {
     margin-bottom: 1rem;
+}
+
+#mensagem {
+    margin: 1rem 0;
+    color: var(--olive-leaf-dark);
+    font-weight: bold;
+    text-align: center;
 }
 
 .cards-container {
@@ -190,6 +444,186 @@ main {
     margin-left: 1.5rem;
 }
 
+.pagina-informativa {
+    display: block;
+}
+
+.pagina-informativa h1,
+.pagina-informativa h2,
+.minhas-plantas-pagina h1,
+.minhas-plantas-pagina h2 {
+    color: var(--olive-leaf-dark);
+}
+
+.pagina-informativa h1,
+.minhas-plantas-pagina h1 {
+    margin-bottom: 0.75rem;
+}
+
+.pagina-informativa h2,
+.minhas-plantas-pagina h2 {
+    margin-bottom: 0.5rem;
+}
+
+.pagina-informativa p,
+.minhas-plantas-pagina p {
+    line-height: 1.6;
+}
+
+.pagina-informativa section + section {
+    margin-top: 1.5rem;
+}
+
+.lista-pagina {
+    padding-left: 1.5rem;
+    line-height: 1.6;
+}
+
+.lista-pagina li + li {
+    margin-top: 0.4rem;
+}
+
+.chamada-pagina {
+    padding: 1.5rem;
+    background-color: var(--beige);
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+}
+
+.chamada-pagina .botao {
+    margin-top: 0.5rem;
+}
+
+.minhas-plantas-pagina {
+    display: block;
+}
+
+.introducao-colecao {
+    margin-bottom: 0.5rem;
+}
+
+.aviso-colecao {
+    margin-bottom: 1.5rem;
+    color: var(--olive-wood);
+    font-style: italic;
+}
+
+.adicionar-planta {
+    max-width: 760px;
+    padding: 1.5rem;
+    background-color: var(--beige);
+    border: 1px solid var(--fern);
+    border-radius: 8px;
+}
+
+.adicionar-planta label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.adicionar-planta-controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.adicionar-planta select {
+    flex: 1 1 260px;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--fern);
+    border-radius: 6px;
+    background-color: white;
+    font-size: 1rem;
+}
+
+.adicionar-planta button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#status-minhas-plantas {
+    margin-top: 0.5rem;
+}
+
+.colecao-plantas {
+    margin-top: 0.5rem;
+}
+
+.colecao-plantas .cards-container {
+    grid-template-columns: repeat(auto-fill, 190px);
+    justify-content: start;
+}
+
+.minha-planta-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 280px;
+    padding: 0.75rem;
+}
+
+.minha-planta-card .planta-imagem {
+    height: 100px;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+}
+
+.minha-planta-card .credito-imagem {
+    display: -webkit-box;
+    margin: 0 0 0.5rem;
+    overflow: hidden;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.minha-planta-card h3 {
+    margin: 0 0 0.5rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.minha-planta-card h3 a {
+    color: var(--olive-leaf-dark);
+    text-decoration: none;
+}
+
+.minha-planta-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.minha-planta-card p.nome-cientifico {
+    margin: 0 0 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.minha-planta-card .botao {
+    margin-top: auto;
+    border: 0;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.colecao-vazia {
+    grid-column: 1 / -1;
+}
+
+.adicionar-planta select:focus-visible,
+.minha-planta-card .botao:focus-visible,
+.adicionar-planta .botao:focus-visible {
+    outline: 3px solid var(--fern);
+    outline-offset: 2px;
+}
+
 .botao-container {
     margin-top: 2rem;
     text-align: center;
@@ -210,16 +644,61 @@ main {
 
 /* Curiosidades */
 .curiosidades {
-    background-color: var(--fern);
+    background-color: var(--olive-leaf);
     color: white;
     padding: 2rem;
-    text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .curiosidades h2 {
     margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.curiosidades-intro {
+    margin-bottom: 1.5rem;
+    color: var(--beige);
+    text-align: center;
+}
+
+.curiosidades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.curiosidade-card {
+    padding: 1rem;
+    background-color: white;
+    color: #333;
+    border: 1px solid var(--beige);
+    border-radius: 8px;
+}
+
+.curiosidade-arte {
+    display: grid;
+    min-height: 150px;
+    margin-bottom: 1rem;
+    place-items: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--beige), white);
+    border-radius: 6px;
+}
+
+.curiosidade-arte svg {
+    display: block;
+    width: 100%;
+    height: 150px;
+}
+
+.curiosidade-card h3 {
+    margin-bottom: 0.5rem;
+    color: var(--olive-leaf-dark);
+}
+
+.curiosidade-card p {
+    line-height: 1.5;
 }
 
 /* Ficha da planta */

@@ -8,15 +8,29 @@
 </head>
 <body>
     <header>
-        <nav>
-            <div class="logo">Cultiva.me</div>
+        <nav aria-label="Navegação principal">
+            <a class="logo" href="index.html">Cultiva.me</a>
             <ul class="menu">
                 <li><a href="index.html">Início</a></li>
-                <li><a href="sobre.html">Sobre</a></li>
-                <li><a href="guia.html">Guia</a></li>
-                <li><a href="plantas.html">Plantas</a></li>
-                <li><a href="urbana.html">Urbana</a></li>
-                <li><a href="minhas-plantas.html">Minhas Plantas</a></li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Explorar</summary>
+                        <ul class="submenu">
+                            <li><a href="catalogo-plantas.html">Plantas</a></li>
+                            <li><a href="guia.html">Guia</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Cultivar</summary>
+                        <ul class="submenu">
+                            <li><a href="urbana.html">Urbana</a></li>
+                            <li><a href="minhas-plantas.html">Minhas Plantas</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="sobre.html" aria-current="page">Sobre</a></li>
             </ul>
         </nav>
     </header>

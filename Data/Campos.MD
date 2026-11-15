@@ -95,14 +95,26 @@ if (planta.agua.intervaloDias.verao !== null) { /* tem intervalo de rega */ }
 
 ## Para filtros e busca
 
-| Campo | Valores |
-| --- | --- |
-| `dificuldade` | `facil` · `media` · `dificil` (**calculado**) |
-| `ambientes` | lista: `vaso` · `jardineira` · `varanda` · `horta-vertical` · `canteiro` · `interior` (**calculado**) |
-| `luz` | `sol-pleno` · `meia-sombra` · `sombra` |
+A página `Front-end/pages/catalogo-plantas.html` mantém a busca textual separada do painel
+de filtros, que inicia fechado:
 
-`dificuldade` e `ambientes` não vêm de nenhum banco: são regras nossas, no
-`gerar_plantas_json.py`.
+- **Texto:** procura em id, nome popular e científico, família, região, descrição,
+  dicas e problemas comuns.
+- **Classificação e ambiente:** `categoria`, `dificuldade`, `ambientes`, `luz` e
+  `ciclo.tipo`.
+- **Cuidados:** necessidade e modo de rega, pH e drenagem do solo, umidade,
+  velocidade de crescimento e toxicidade para pets.
+- **Outros dados:** propagação.
+
+Filtros de grupos diferentes são combinados: a planta precisa atender a todos
+os critérios preenchidos. Para ambientes e propagação, basta a planta conter
+o valor escolhido na lista.
+
+Campos sem dado (`null`, texto vazio ou lista vazia) não passam por um filtro
+ativo daquele campo; sem filtros preenchidos, permanecem nos resultados.
+
+`dificuldade` e `ambientes` são campos derivados no `gerar_plantas_json.py`,
+não vêm de uma base externa:
 - **`dificuldade`** soma pontos por rega alta, ciclo anual demorado e porte
   acima de 3 m.
 - **`ambientes`** sai do tamanho da planta.

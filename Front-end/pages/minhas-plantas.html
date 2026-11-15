@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultiva.me - Minhas Plantas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav aria-label="Navegação principal">
+            <a class="logo" href="index.html">Cultiva.me</a>
+            <ul class="menu">
+                <li><a href="index.html">Início</a></li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Explorar</summary>
+                        <ul class="submenu">
+                            <li><a href="catalogo-plantas.html">Plantas</a></li>
+                            <li><a href="guia.html">Guia</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Cultivar</summary>
+                        <ul class="submenu">
+                            <li><a href="urbana.html">Urbana</a></li>
+                            <li><a href="minhas-plantas.html" aria-current="page">Minhas Plantas</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="sobre.html">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="minhas-plantas-pagina">
+        <h1>Minhas Plantas</h1>
+        <p class="introducao-colecao">Monte uma lista das plantas que você cultiva e consulte suas fichas.</p>
+
+        <section class="adicionar-planta">
+            <h2>Adicionar uma planta</h2>
+            <form id="form-minhas-plantas">
+                <label for="selecionar-planta">Escolha uma planta do catálogo</label>
+                <div class="adicionar-planta-controles">
+                    <select id="selecionar-planta" name="planta" required disabled>
+                        <option value="">Carregando catálogo...</option>
+                    </select>
+                    <button class="botao" type="submit" disabled>Adicionar à minha lista</button>
+                </div>
+            </form>
+        </section>
+
+        <p id="status-minhas-plantas" role="status" aria-live="polite">Carregando catálogo...</p>
+
+        <section class="colecao-plantas" aria-labelledby="titulo-colecao">
+            <h2 id="titulo-colecao">Minha coleção</h2>
+            <div class="cards-container" id="lista-minhas-plantas"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="links-uteis">Links úteis</div>
+        <div class="licenca">Licença de uso</div>
+    </footer>
+    <script src="minhas-plantas.js"></script>
+</body>
+</html>

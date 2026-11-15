@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultiva.me - Catálogo de plantas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav aria-label="Navegação principal">
+            <a class="logo" href="index.html">Cultiva.me</a>
+            <ul class="menu">
+                <li><a href="index.html">Início</a></li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Explorar</summary>
+                        <ul class="submenu">
+                            <li><a href="catalogo-plantas.html" aria-current="page">Plantas</a></li>
+                            <li><a href="guia.html">Guia</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Cultivar</summary>
+                        <ul class="submenu">
+                            <li><a href="urbana.html">Urbana</a></li>
+                            <li><a href="minhas-plantas.html">Minhas Plantas</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="sobre.html">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="destaques">
+            <h1>Buscar plantas</h1>
+            <p class="texto-busca">Pesquise por nome ou conteúdo da ficha. Se quiser, abra os filtros para refinar os resultados.</p>
+            <div class="campo-busca">
+                <label for="busca">Buscar por nome popular ou científico, família, região ou texto da ficha</label>
+                <input id="busca" type="search" placeholder="Ex.: manjericão, sol pleno, folhas amarelas">
+            </div>
+            <details class="painel-filtros">
+                <summary>Filtros de cultivo</summary>
+                <form id="filtros-plantas">
+                    <fieldset class="grupo-filtros">
+                        <legend>Classificação e ambiente</legend>
+                        <div class="filtros-grid">
+                            <label for="filtro-categoria">Categoria
+                                <select id="filtro-categoria">
+                                    <option value="">Todas</option>
+                                    <option value="erva">Erva</option>
+                                    <option value="hortalica">Hortaliça</option>
+                                    <option value="medicinal">Medicinal</option>
+                                    <option value="ornamental">Ornamental</option>
+                                    <option value="fruta">Fruta</option>
+                                </select>
+                            </label>
+                            <label for="filtro-dificuldade">Dificuldade
+                                <select id="filtro-dificuldade">
+                                    <option value="">Todas</option>
+                                    <option value="facil">Fácil</option>
+                                    <option value="media">Média</option>
+                                    <option value="dificil">Difícil</option>
+                                </select>
+                            </label>
+                            <label for="filtro-ambiente">Ambiente
+                                <select id="filtro-ambiente">
+                                    <option value="">Todos</option>
+                                    <option value="vaso">Vaso</option>
+                                    <option value="jardineira">Jardineira</option>
+                                    <option value="varanda">Varanda</option>
+                                    <option value="horta-vertical">Horta vertical</option>
+                                    <option value="canteiro">Canteiro</option>
+                                    <option value="interior">Interior</option>
+                                </select>
+                            </label>
+                            <label for="filtro-luz">Luz
+                                <select id="filtro-luz">
+                                    <option value="">Todas</option>
+                                    <option value="sol-pleno">Sol pleno</option>
+                                    <option value="meia-sombra">Meia-sombra</option>
+                                    <option value="sombra">Sombra</option>
+                                </select>
+                            </label>
+                            <label for="filtro-ciclo">Ciclo de vida
+                                <select id="filtro-ciclo">
+                                    <option value="">Todos</option>
+                                    <option value="anual">Anual</option>
+                                    <option value="perene">Perene</option>
+                                </select>
+                            </label>
+                            <label for="filtro-toxicidade">Toxicidade para pets
+                                <select id="filtro-toxicidade">
+                                    <option value="">Todas</option>
+                                    <option value="nao-toxica">Não tóxica</option>
+                                    <option value="levemente-toxica">Levemente tóxica</option>
+                                    <option value="toxica">Tóxica</option>
+                                </select>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="grupo-filtros">
+                        <legend>Cuidados e características</legend>
+                        <div class="filtros-grid">
+                            <label for="filtro-agua">Necessidade de água
+                                <select id="filtro-agua">
+                                    <option value="">Todas</option>
+                                    <option value="baixa">Baixa</option>
+                                    <option value="media">Média</option>
+                                    <option value="alta">Alta</option>
+                                </select>
+                            </label>
+                            <label for="filtro-modo-rega">Modo de rega
+                                <select id="filtro-modo-rega">
+                                    <option value="">Todos</option>
+                                    <option value="por-cima">Por cima</option>
+                                    <option value="por-baixo">Por baixo</option>
+                                    <option value="imersao">Imersão</option>
+                                    <option value="borrifar">Borrifar</option>
+                                </select>
+                            </label>
+                            <label for="filtro-ph">pH do solo
+                                <select id="filtro-ph">
+                                    <option value="">Todos</option>
+                                    <option value="acido">Ácido</option>
+                                    <option value="neutro">Neutro</option>
+                                    <option value="alcalino">Alcalino</option>
+                                    <option value="adaptavel">Adaptável</option>
+                                </select>
+                            </label>
+                            <label for="filtro-drenagem">Drenagem do solo
+                                <select id="filtro-drenagem">
+                                    <option value="">Todas</option>
+                                    <option value="bem-drenado">Bem drenado</option>
+                                    <option value="drenagem-alta">Drenagem alta</option>
+                                    <option value="retem-umidade">Retém umidade</option>
+                                    <option value="tolera-encharcamento">Tolera encharcamento</option>
+                                </select>
+                            </label>
+                            <label for="filtro-umidade">Umidade do ar
+                                <select id="filtro-umidade">
+                                    <option value="">Todas</option>
+                                    <option value="baixa">Baixa</option>
+                                    <option value="media">Média</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="muito-alta">Muito alta</option>
+                                </select>
+                            </label>
+                            <label for="filtro-crescimento">Velocidade de crescimento
+                                <select id="filtro-crescimento">
+                                    <option value="">Todas</option>
+                                    <option value="lento">Lento</option>
+                                    <option value="moderado">Moderado</option>
+                                    <option value="rapido">Rápido</option>
+                                </select>
+                            </label>
+                            <label for="filtro-propagacao">Propagação
+                                <select id="filtro-propagacao">
+                                    <option value="">Todas</option>
+                                    <option value="sementes">Sementes</option>
+                                    <option value="estaquia-de-caule">Estaquia de caule</option>
+                                    <option value="estaquia-de-folha">Estaquia de folha</option>
+                                    <option value="divisao-de-touceira">Divisão de touceira</option>
+                                    <option value="divisao-de-bulbos">Divisão de bulbos</option>
+                                    <option value="divisao-de-tuberculos">Divisão de tubérculos</option>
+                                    <option value="enxertia">Enxertia</option>
+                                    <option value="alporquia">Alporquia</option>
+                                    <option value="mergulhia">Mergulhia</option>
+                                    <option value="mudas-laterais">Mudas laterais</option>
+                                    <option value="mudas-aereas">Mudas aéreas</option>
+                                    <option value="estolhos">Estolhos</option>
+                                    <option value="esporos">Esporos</option>
+                                </select>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <button class="botao limpar-filtros" type="reset">Limpar filtros</button>
+                </form>
+            </details>
+            <p id="mensagem" role="status" aria-live="polite">Carregando catálogo...</p>
+            <div class="cards-container" id="lista"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="links-uteis">Links úteis</div>
+        <div class="licenca">Licença de uso</div>
+    </footer>
+
+    <script src="catalogo-plantas.js"></script>
+</body>
+</html>
