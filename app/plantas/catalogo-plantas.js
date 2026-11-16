@@ -4,9 +4,13 @@ const campoBusca = document.getElementById("busca");
 const filtros = document.getElementById("filtros-plantas");
 const lista = document.getElementById("lista");
 const mensagem = document.getElementById("mensagem");
+const paginacao = document.getElementById("paginacao");
+const plantasPorPagina = 12;
 const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
 
 let plantas = [];
+let resultados = [];
+let paginaAtual = 1;
 
 function normalizar(texto) {
     return String(texto || "")
@@ -138,19 +142,94 @@ function criarCartao(planta) {
 }
 
 function mostrar(listaDePlantas) {
-    const cartoes = listaDePlantas.map(criarCartao);
+    const inicio = (paginaAtual - 1) * plantasPorPagina;
+    const cartoes = listaDePlantas.slice(inicio, inicio + plantasPorPagina).map(criarCartao);
     lista.replaceChildren(...cartoes);
+
+    mostrarPaginacao(listaDePlantas.length);
 
     const quantidade = listaDePlantas.length;
     mensagem.textContent = `${quantidade} planta${quantidade === 1 ? "" : "s"} encontrada${quantidade === 1 ? "" : "s"}.`;
 }
+
+function mostrarPaginacao(quantidade) {
+    const totalPaginas = Math.ceil(quantidade / plantasPorPagina);
+    paginacao.replaceChildren();
+    paginacao.hidden = totalPaginas <= 1;
+    if (paginacao.hidden) {
+        return;
+    }
+
+    let inicio = Math.max(1, paginaAtual - 1);
+    let fim = Math.min(totalPaginas, paginaAtual + 1);
+    if (totalPaginas <= 7) {
+        inicio = 1;
+        fim = totalPaginas;
+    } else if (paginaAtual <= 3) {
+        inicio = 1;
+        fim = 4;
+    } else if (paginaAtual >= totalPaginas - 2) {
+        inicio = totalPaginas - 3;
+        fim = totalPaginas;
+    }
+
+    const paginas = new Set([1, totalPaginas]);
+    for (let numero = inicio; numero <= fim; numero++) {
+        paginas.add(numero);
+    }
+
+    let anterior = 0;
+    for (const numero of [...paginas].sort((a, b) => a - b)) {
+        if (numero - anterior === 2) {
+            adicionarPagina(numero - 1);
+        } else if (numero - anterior > 2) {
+            const reticencias = document.createElement("span");
+            reticencias.textContent = "...";
+            reticencias.setAttribute("aria-hidden", "true");
+            paginacao.append(reticencias);
+        }
+        adicionarPagina(numero);
+        anterior = numero;
+    }
+}
+
+function adicionarPagina(numero) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = numero;
+    botao.dataset.pagina = numero;
+    botao.setAttribute("aria-label", `Página ${numero}`);
+    botao.setAttribute("aria-controls", "lista");
+    if (numero === paginaAtual) {
+        botao.setAttribute("aria-current", "page");
+    }
+    paginacao.append(botao);
+}
+
+paginacao.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("button[data-pagina]");
+    if (!botao || !paginacao.contains(botao)) {
+        return;
+    }
+    const numero = Number(botao.dataset.pagina);
+    const totalPaginas = Math.ceil(resultados.length / plantasPorPagina);
+    if (!Number.isInteger(numero) || numero < 1 || numero > totalPaginas || numero === paginaAtual) {
+        return;
+    }
+
+    paginaAtual = numero;
+    mostrar(resultados);
+    paginacao.querySelector('[aria-current="page"]').focus();
+});
 
 function buscar() {
     const termo = normalizar(campoBusca.value.trim());
     const resultado = plantas.filter((planta) =>
         (!termo || textoDaPlanta(planta).includes(termo)) &&
         correspondeCaracteristicas(planta));
-    mostrar(resultado);
+    resultados = resultado;
+    paginaAtual = 1;
+    mostrar(resultados);
 }
 
 campoBusca.addEventListener("input", buscar);

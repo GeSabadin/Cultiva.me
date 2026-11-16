@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultiva.me - Catálogo de plantas</title>
     <link rel="stylesheet" href="../compartilhado/style.css">
+    <link rel="icon" type="image/svg+xml" href="../compartilhado/imgs/logo/favicon.svg">
 </head>
 <body>
     <header>
         <nav aria-label="Navegação principal">
-            <a class="logo" href="../inicio/index.html">Cultiva.me</a>
+            <a class="logo" href="../inicio/index.html"><img src="../compartilhado/imgs/logo/logo.png" alt="Cultiva.me" width="2172" height="724"></a>
             <ul class="menu">
                 <li><a href="../inicio/index.html">Início</a></li>
                 <li>
@@ -185,6 +186,7 @@
             </details>
             <p id="mensagem" role="status" aria-live="polite">Carregando catálogo...</p>
             <div class="cards-container" id="lista"></div>
+            <nav id="paginacao" class="paginacao" aria-label="Paginação do catálogo" hidden></nav>
         </section>
     </main>
 
@@ -194,5 +196,6 @@
     </footer>
 
     <script type="module" src="catalogo-plantas.js"></script>
+    <script type="module" src="../compartilhado/navegacao.js"></script>
 </body>
 </html>
