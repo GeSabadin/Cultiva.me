@@ -5,20 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultiva.me - Início</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../compartilhado/style.css">
+    <link rel="icon" type="image/svg+xml" href="../compartilhado/imgs/logo/favicon.svg">
 </head>
 <body>
     <header>
         <nav aria-label="Navegação principal">
-            <a class="logo" href="index.html">Cultiva.me</a>
+            <a class="logo" href="index.html"><img src="../compartilhado/imgs/logo/logo.png" alt="Cultiva.me" width="2172" height="724"></a>
             <ul class="menu">
                 <li><a href="index.html" aria-current="page">Início</a></li>
                 <li>
                     <details class="menu-dropdown">
                         <summary>Explorar</summary>
                         <ul class="submenu">
-                            <li><a href="catalogo-plantas.html">Plantas</a></li>
-                            <li><a href="guia.html">Guia</a></li>
+                            <li><a href="../plantas/catalogo-plantas.html">Plantas</a></li>
+                            <li><a href="../guia/guia.html">Guia</a></li>
                         </ul>
                     </details>
                 </li>
@@ -26,12 +27,12 @@
                     <details class="menu-dropdown">
                         <summary>Cultivar</summary>
                         <ul class="submenu">
-                            <li><a href="urbana.html">Urbana</a></li>
-                            <li><a href="minhas-plantas.html">Minhas Plantas</a></li>
+                            <li><a href="../urbana/urbana.html">Urbana</a></li>
+                            <li><a href="../minhas-plantas/minhas-plantas.html">Minhas Plantas</a></li>
                         </ul>
                     </details>
                 </li>
-                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="../sobre/sobre.html">Sobre</a></li>
             </ul>
         </nav>
     </header>
@@ -48,7 +49,7 @@
                         O catálogo inclui ervas, hortaliças, frutíferas, medicinais e
                         ornamentais, com informações de cultivo quando disponíveis.
                     </p>
-                    <a class="botao dica-link" href="catalogo-plantas.html">Explorar o catálogo</a>
+                    <a class="botao dica-link" href="../plantas/catalogo-plantas.html">Explorar o catálogo</a>
                 </article>
 
                 <article class="dica-card">
@@ -59,7 +60,7 @@
                         tempo você tem para cuidar. Compare esses fatores com a ficha
                         da planta antes de escolher.
                     </p>
-                    <a class="botao dica-link" href="catalogo-plantas.html">Buscar plantas</a>
+                    <a class="botao dica-link" href="../plantas/catalogo-plantas.html">Buscar plantas</a>
                 </article>
 
                 <article class="dica-card">
@@ -71,7 +72,7 @@
                         <li>Posicione o vaso conforme a necessidade de luz da espécie.</li>
                         <li>Regue conforme a ficha e evite deixar água acumulada no prato.</li>
                     </ol>
-                    <a class="botao dica-link" href="catalogo-plantas.html">Consultar fichas de cultivo</a>
+                    <a class="botao dica-link" href="../plantas/catalogo-plantas.html">Consultar fichas de cultivo</a>
                 </article>
             </div>
         </section>
@@ -81,7 +82,7 @@
             <p id="status-plantas" role="status" aria-live="polite">Carregando plantas...</p>
             <div class="cards-container" id="plantas-container"></div>
             <div class="botao-container">
-                <a class="botao" href="catalogo-plantas.html">Ver todas as plantas e buscar</a>
+                <a class="botao" href="../plantas/catalogo-plantas.html">Ver todas as plantas e buscar</a>
             </div>
         </section>
 
@@ -140,6 +141,7 @@
         <div class="links-uteis">Links úteis</div>
         <div class="licenca">Licença de uso</div>
     </footer>
-    <script src="index.js"></script>
+    <script type="module" src="index.js"></script>
+    <script type="module" src="../compartilhado/navegacao.js"></script>
 </body>
 </html>
