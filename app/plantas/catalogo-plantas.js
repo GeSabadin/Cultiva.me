@@ -1,8 +1,10 @@
+import { Planta } from "../compartilhado/modelos/planta.js";
+
 const campoBusca = document.getElementById("busca");
 const filtros = document.getElementById("filtros-plantas");
 const lista = document.getElementById("lista");
 const mensagem = document.getElementById("mensagem");
-const urlCatalogo = new URL("../../Data/Plantas.json", document.currentScript.src);
+const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
 
 let plantas = [];
 
@@ -101,7 +103,7 @@ function criarCartao(planta) {
     if (imagem.arquivo) {
         const foto = document.createElement("img");
         foto.className = "planta-imagem";
-        foto.src = `../${imagem.arquivo}`;
+        foto.src = `../compartilhado/${imagem.arquivo}`;
         foto.alt = `Foto de ${planta.nomePopular}`;
         foto.loading = "lazy";
         cartao.append(foto);
@@ -172,7 +174,7 @@ if (window.location.protocol === "file:") {
             if (!Array.isArray(dados.plantas)) {
                 throw new Error("O arquivo Plantas.json não contém uma lista de plantas válida.");
             }
-            plantas = dados.plantas;
+            plantas = dados.plantas.map((planta) => new Planta(planta));
             buscar();
         })
         .catch((erro) => {

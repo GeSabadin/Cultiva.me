@@ -1,6 +1,8 @@
+import { Planta } from "../compartilhado/modelos/planta.js";
+
 const ficha = document.getElementById("ficha");
 const statusFicha = document.getElementById("status-ficha");
-const urlCatalogo = new URL("../../Data/Plantas.json", document.currentScript.src);
+const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
 
 const parametros = new URLSearchParams(window.location.search);
 const idPlanta = parametros.get("id");
@@ -45,7 +47,7 @@ function mostrarNaoEncontrada() {
     titulo.textContent = "Planta não encontrada";
 
     const linkInicio = document.createElement("a");
-    linkInicio.href = "index.html";
+    linkInicio.href = "../inicio/index.html";
     linkInicio.textContent = "Voltar para o Início";
 
     ficha.replaceChildren(titulo, linkInicio);
@@ -58,7 +60,7 @@ function mostrarFicha(planta) {
     const breadcrumb = document.createElement("nav");
     breadcrumb.className = "breadcrumb";
     const linkInicio = document.createElement("a");
-    linkInicio.href = "index.html";
+    linkInicio.href = "../inicio/index.html";
     linkInicio.textContent = "Início";
     breadcrumb.append(linkInicio, " > ", planta.nomePopular);
 
@@ -71,7 +73,7 @@ function mostrarFicha(planta) {
         figura.className = "ficha-foto";
 
         const imagem = document.createElement("img");
-        imagem.src = `../${planta.imagem.arquivo}`;
+        imagem.src = `../compartilhado/${planta.imagem.arquivo}`;
         imagem.alt = `Foto de ${planta.nomePopular}`;
         figura.append(imagem);
 
@@ -188,7 +190,7 @@ if (window.location.protocol === "file:") {
             }
             const planta = dados.plantas.find((p) => p.id === idPlanta);
             if (planta) {
-                mostrarFicha(planta);
+                mostrarFicha(new Planta(planta));
             } else {
                 mostrarNaoEncontrada();
             }

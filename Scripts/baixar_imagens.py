@@ -13,7 +13,7 @@ COMO USAR
        python baixar_imagens.py                  (todas as plantas)
        python baixar_imagens.py alface morango   (só essas, pelo id)
 
-As fotos vão para Front-end/imgs/plantas/<id>.jpg e o Plantas.json é
+As fotos vão para app/compartilhado/imgs/plantas/<id>.jpg e o Plantas.json é
 atualizado. As plantas que ficarem sem foto vão para
 local_backup/relatorio_imagens.md, para resolver na mão.
 
@@ -79,8 +79,8 @@ from pathlib import Path
 PASTA_DO_SCRIPT = Path(__file__).resolve().parent
 RAIZ = PASTA_DO_SCRIPT.parent
 ARQUIVO_PLANTAS = RAIZ / "Data" / "Plantas.json"
-PASTA_FRONT = RAIZ / "Front-end"
-PASTA_FOTOS = PASTA_FRONT / "imgs" / "plantas"      # arquivo é relativo a Front-end
+PASTA_FRONT = RAIZ / "app" / "compartilhado"
+PASTA_FOTOS = PASTA_FRONT / "imgs" / "plantas"      # arquivo é relativo a app/compartilhado
 PASTA_BACKUP = RAIZ / "local_backup"
 ARQUIVO_RELATORIO = PASTA_BACKUP / "relatorio_imagens.md"
 PASTA_CANDIDATOS = PASTA_BACKUP / "candidatos"
@@ -506,7 +506,7 @@ def escrever_relatorio(conteudo, escolhas=None):
     linhas = [
         "# Fotos das plantas", "",
         f"Com foto: {com_foto} de {len(total)}.", "",
-        "Para resolver na mão: coloque a foto em Front-end/imgs/plantas/<id>.jpg",
+        "Para resolver na mão: coloque a foto em app/compartilhado/imgs/plantas/<id>.jpg",
         "e preencha o campo imagem com autor, licença e url (página da foto).", "",
         "## Sem foto", "",
     ]

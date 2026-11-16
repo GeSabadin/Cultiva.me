@@ -1,9 +1,11 @@
+import { Planta } from "../compartilhado/modelos/planta.js";
+
 // Elementos da página que recebem os cartões e as mensagens de estado.
 const containerPlantas = document.getElementById("plantas-container");
 const statusPlantas = document.getElementById("status-plantas");
 
 // Localiza o catálogo a partir do endereço deste arquivo JavaScript.
-const urlCatalogo = new URL("../../Data/Plantas.json", document.currentScript.src);
+const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
 
 // A lista será preenchida depois que o catálogo for carregado.
 let plantas = [];
@@ -14,13 +16,13 @@ function criarCartao(planta) {
     cartao.className = "card";
 
     // O identificador da planta é usado para abrir sua ficha completa.
-    const enderecoFicha = `ficha-planta.html?id=${planta.id}`;
+    const enderecoFicha = `../plantas/ficha-planta.html?id=${planta.id}`;
 
     // A imagem e seus créditos só são exibidos quando os dados estão disponíveis.
     if (planta.imagem && planta.imagem.arquivo) {
         const imagem = document.createElement("img");
         imagem.className = "planta-imagem";
-        imagem.src = `../${planta.imagem.arquivo}`;
+        imagem.src = `../compartilhado/${planta.imagem.arquivo}`;
         imagem.alt = `Foto de ${planta.nomePopular}`;
         imagem.loading = "lazy"; // Carrega a imagem quando ela estiver próxima de aparecer na tela.
         
@@ -102,7 +104,7 @@ if (window.location.protocol === "file:") {
             }
 
             // Guarda as plantas carregadas e atualiza o conteúdo da página.
-            plantas = dados.plantas;
+            plantas = dados.plantas.map((planta) => new Planta(planta));
             mostrarPlantas();
         })
         .catch((erro) => {

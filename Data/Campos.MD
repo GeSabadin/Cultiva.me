@@ -87,7 +87,7 @@ if (planta.agua.intervaloDias.verao !== null) { /* tem intervalo de rega */ }
 - **`problemasComuns`** só existe nas 5 fichas de exemplo. Vem separado em
   sintoma, causa e solução porque o questionário "O que há com a minha
   planta?" parte do sintoma.
-- **`imagem.arquivo`** é relativo à pasta `Front-end`. A foto é baixada pelo
+- **`imagem.arquivo`** é relativo à pasta `app/compartilhado`. A foto é baixada pelo
   `Scripts/baixar_imagens.py`.
 - **Crédito da foto:** toda foto exibida precisa mostrar `autor` e `licenca`,
   com link para `url`, que é a página original da foto. As regras completas
@@ -95,7 +95,7 @@ if (planta.agua.intervaloDias.verao !== null) { /* tem intervalo de rega */ }
 
 ## Para filtros e busca
 
-A página `Front-end/pages/catalogo-plantas.html` mantém a busca textual separada do painel
+A página `app/plantas/catalogo-plantas.html` mantém a busca textual separada do painel
 de filtros, que inicia fechado:
 
 - **Texto:** procura em id, nome popular e científico, família, região, descrição,

@@ -1,8 +1,10 @@
+import { Planta } from "../compartilhado/modelos/planta.js";
+
 const formulario = document.getElementById("form-minhas-plantas");
 const seletorPlanta = document.getElementById("selecionar-planta");
 const listaMinhasPlantas = document.getElementById("lista-minhas-plantas");
 const statusMinhasPlantas = document.getElementById("status-minhas-plantas");
-const urlCatalogo = new URL("../../Data/Plantas.json", document.currentScript.src);
+const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
 const chaveArmazenamento = "cultiva.me.minhasPlantas";
 
 let plantas = [];
@@ -49,7 +51,7 @@ function criarCartao(plantaId) {
     if (planta && planta.imagem && planta.imagem.arquivo) {
         const imagem = document.createElement("img");
         imagem.className = "planta-imagem";
-        imagem.src = `../${planta.imagem.arquivo}`;
+        imagem.src = `../compartilhado/${planta.imagem.arquivo}`;
         imagem.alt = `Foto de ${planta.nomePopular}`;
         imagem.loading = "lazy";
         cartao.append(imagem);
@@ -70,7 +72,7 @@ function criarCartao(plantaId) {
     const titulo = document.createElement("h3");
     if (planta) {
         const linkFicha = document.createElement("a");
-        linkFicha.href = `ficha-planta.html?id=${encodeURIComponent(planta.id)}`;
+        linkFicha.href = `../plantas/ficha-planta.html?id=${encodeURIComponent(planta.id)}`;
         linkFicha.textContent = planta.nomePopular;
         titulo.append(linkFicha);
 
@@ -169,7 +171,7 @@ function carregarCatalogo() {
                 throw new Error("O arquivo Plantas.json não contém uma lista de plantas válida.");
             }
 
-            plantas = dados.plantas;
+            plantas = dados.plantas.map((planta) => new Planta(planta));
             preencherSeletor();
 
             try {
