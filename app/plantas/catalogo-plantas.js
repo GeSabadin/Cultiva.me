@@ -232,6 +232,29 @@ function buscar() {
     mostrar(resultados);
 }
 
+function aplicarFiltrosDaUrl() {
+    const parametros = new URLSearchParams(window.location.search);
+    let aplicados = 0;
+
+    parametros.forEach((valor, nome) => {
+        const select = document.getElementById(`filtro-${nome}`);
+        if (!select || !valor) {
+            return;
+        }
+        const opcaoExiste = Array.from(select.options).some((opcao) => opcao.value === valor);
+        if (opcaoExiste) {
+            select.value = valor;
+            aplicados++;
+        }
+    });
+
+    if (aplicados > 0) {
+        document.querySelector(".painel-filtros").open = true; 
+    }
+}
+
+aplicarFiltrosDaUrl();
+
 campoBusca.addEventListener("input", buscar);
 filtros.addEventListener("input", buscar);
 filtros.addEventListener("change", buscar);

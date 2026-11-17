@@ -26,7 +26,7 @@
                     <details class="menu-dropdown">
                         <summary>Cultivar</summary>
                         <ul class="submenu">
-                            <li><a href="urbana.html" aria-current="page">Urbana</a></li>
+                            <li><a href="urbana.html" aria-current="page">Meu Espaço</a></li>
                             <li><a href="../minhas-plantas/minhas-plantas.html">Minhas Plantas</a></li>
                         </ul>
                     </details>
@@ -37,38 +37,128 @@
     </header>
 
     <main class="pagina-informativa">
-        <h1>Cultivo urbano</h1>
-        <p>Mesmo com pouco espaço, é possível cultivar plantas em vasos, jardineiras e outros recipientes, desde que as condições sejam adequadas para cada espécie.</p>
-
-        <section>
-            <h2>Comece pelo espaço disponível</h2>
-            <p>Meça a área e observe a incidência de sol ao longo do dia. Varandas, janelas e áreas internas oferecem condições diferentes, então escolha as plantas considerando a luz real do local.</p>
+        <section class="banner-espaco">
+            <div>
+                <h1>Jardinagem em pouco espaço</h1>
+                <p>Varanda, janela ou apartamento sem sol: tem planta para todo canto da cidade.</p>
+            </div>
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M17 28H31L29 42H19L17 28Z" fill="#765E43"/>
+<path d="M24 30V14" stroke="#3A4A22" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M24 23C18 23 16 19 16 15C21 15 24 18 24 23Z" fill="#4A6226"/>
+<path d="M24 19C30 19 32 15 32 11C27 11 24 14 24 19Z" fill="#5A703A"/>
+<path d="M5 30H43M5 42H43M9 30V42M17 30V42M31 30V42M39 30V42" stroke="#3A4A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
         </section>
 
         <section>
-            <h2>Use recipientes adequados</h2>
-            <p>Escolha recipientes com espaço para as raízes e furos para escoar o excesso de água. Em prateleiras e jardins verticais, respeite o limite de peso e fixe as estruturas com segurança.</p>
+            <h2>Qual é o seu espaço?</h2>
+            <form id="escolha-espaco" class="chips">
+                <label class="chip">
+                    <input type="radio" name="espaco" value="varanda-sol" data-ambiente="varanda" data-luz="sol-pleno" checked>
+                    Varanda com sol
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="janela" data-ambiente="jardineira">
+                    Janela
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="pouca-luz" data-ambiente="interior" data-luz="sombra">
+                    Apartamento com pouca luz
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="parede" data-ambiente="horta-vertical">
+                    Parede / horta vertical
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="cozinha" data-ambiente="jardineira" data-categoria="erva">
+                    Horta na cozinha
+                </label>
+            </form>
+
+            <div class="conteudo-espaco" data-espaco="varanda-sol">
+                <div class="caixa-dicas">
+                    <h3>Dicas para varanda com sol</h3>
+                    <ul>
+                        <!-- TODO: escrever as dicas para varanda com sol (com fonte) -->
+                    </ul>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <!-- TODO: listar os materiais para o espaço "varanda-sol" (com fonte) -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="janela" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para janela</h3>
+                    <ul>
+                        <!-- TODO: escrever as dicas para janela (com fonte) -->
+                    </ul>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <!-- TODO: listar os materiais para o espaço "janela" (com fonte) -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="pouca-luz" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para apartamento com pouca luz</h3>
+                    <ul>
+                        <!-- TODO: escrever as dicas para apartamento com pouca luz (com fonte) -->
+                    </ul>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <!-- TODO: listar os materiais para o espaço "pouca-luz" (com fonte) -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="parede" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para parede e horta vertical</h3>
+                    <ul>
+                        <!-- TODO: escrever as dicas para parede e horta vertical (com fonte) -->
+                    </ul>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <!-- TODO: listar os materiais para o espaço "parede" (com fonte) -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="cozinha" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para horta na cozinha</h3>
+                    <ul>
+                        <!-- TODO: escrever as dicas para horta na cozinha (com fonte) -->
+                    </ul>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <!-- TODO: listar os materiais para o espaço "cozinha" (com fonte) -->
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <section>
-            <h2>Planeje a disposição</h2>
-            <ul class="lista-pagina">
-                <li>Agrupe plantas com necessidades parecidas de luz e rega.</li>
-                <li>Deixe espaço para circulação de ar e para alcançar cada vaso.</li>
-                <li>Considere o porte adulto, não apenas o tamanho da muda.</li>
-                <li>Proteja o piso e evite que a água escorra para áreas de passagem.</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Escolha espécies para seu ambiente</h2>
-            <p>O catálogo informa porte e condições de cultivo quando esses dados estão disponíveis. Use essas informações como referência e considere também o clima da sua região.</p>
-        </section>
-
-        <section class="chamada-pagina">
-            <h2>Explore as plantas do catálogo</h2>
-            <p>Compare as fichas para encontrar espécies que combinem com seu espaço.</p>
-            <a class="botao" href="../plantas/catalogo-plantas.html">Ver catálogo de plantas</a>
+            <div class="titulo-com-link">
+                <h2>Plantas recomendadas para este espaço</h2>
+                <a id="ver-todas" href="../plantas/catalogo-plantas.html?ambiente=varanda&amp;luz=sol-pleno">Ver todas na busca</a>
+            </div>
+            <p id="status-recomendadas" role="status"></p>
+            <div id="plantas-recomendadas" class="cards-container"></div>
         </section>
     </main>
 
@@ -77,5 +167,6 @@
         <div class="licenca">Licença de uso</div>
     </footer>
     <script type="module" src="../compartilhado/navegacao.js"></script>
+    <script type="module" src="urbana.js"></script>
 </body>
 </html>
