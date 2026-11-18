@@ -955,6 +955,16 @@ footer {
     color: var(--olive-leaf);
 }
 
+.caixa-dicas .fonte {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.caixa-dicas .fonte a {
+    color: var(--olive-leaf-dark);
+}
+
 .caixa-materiais input {
     accent-color: var(--olive-leaf);
     margin-right: 0.3rem;
