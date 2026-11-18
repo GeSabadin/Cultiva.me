@@ -1,31 +1,14 @@
 import { Planta } from "../compartilhado/modelos/planta.js";
+import { lerIdsSalvos, salvarIds } from "../compartilhado/armazenamento.js";
 
 const formulario = document.getElementById("form-minhas-plantas");
 const seletorPlanta = document.getElementById("selecionar-planta");
 const listaMinhasPlantas = document.getElementById("lista-minhas-plantas");
 const statusMinhasPlantas = document.getElementById("status-minhas-plantas");
 const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
-const chaveArmazenamento = "cultiva.me.minhasPlantas";
 
 let plantas = [];
 let idsSalvos = [];
-
-function lerIdsSalvos() {
-    const valorSalvo = localStorage.getItem(chaveArmazenamento);
-    if (valorSalvo === null) {
-        return [];
-    }
-
-    const ids = JSON.parse(valorSalvo);
-    if (!Array.isArray(ids) || ids.some((id) => typeof id !== "string")) {
-        throw new Error("A lista salva não tem um formato válido.");
-    }
-    return [...new Set(ids)];
-}
-
-function salvarIds(ids) {
-    localStorage.setItem(chaveArmazenamento, JSON.stringify(ids));
-}
 
 function preencherSeletor() {
     const opcaoInicial = document.createElement("option");

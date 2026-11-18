@@ -1,4 +1,5 @@
 import { Planta } from "../compartilhado/modelos/planta.js";
+import { lerIdsSalvos, salvarIds } from "../compartilhado/armazenamento.js";
 
 const ficha = document.getElementById("ficha");
 const statusFicha = document.getElementById("status-ficha");
@@ -170,7 +171,68 @@ function mostrarFicha(planta) {
         secaoDicas.append(aviso);
     }
 
-    ficha.replaceChildren(breadcrumb, topo, secaoDicas);
+    ficha.replaceChildren(breadcrumb, topo, secaoDicas, criarAcoes(planta));
+}
+
+// Marca o botão como "já adicionada" e impede novo clique
+function marcarComoAdicionada(botao) {
+    botao.textContent = "Já está nas Minhas Plantas";
+    botao.disabled = true;
+}
+
+// Botões "Adicionar às Minhas Plantas" e "Ir para Minhas Plantas"
+function criarAcoes(planta) {
+    const secaoAcoes = document.createElement("section");
+    secaoAcoes.className = "ficha-acoes";
+
+    const botoes = document.createElement("div");
+    botoes.className = "ficha-acoes-botoes";
+
+    const botaoAdicionar = document.createElement("button");
+    botaoAdicionar.type = "button";
+    botaoAdicionar.className = "botao";
+    botaoAdicionar.textContent = "Adicionar às Minhas Plantas";
+
+    // É navegação para outra página, então é um link (<a>), não um botão
+    const linkMinhasPlantas = document.createElement("a");
+    linkMinhasPlantas.href = "../minhas-plantas/minhas-plantas.html";
+    linkMinhasPlantas.className = "botao";
+    linkMinhasPlantas.textContent = "Ir para Minhas Plantas";
+
+    botoes.append(botaoAdicionar, linkMinhasPlantas);
+
+    // Mensagem de retorno do clique; role="status" faz o leitor de tela anunciá-la
+    const status = document.createElement("p");
+    status.className = "ficha-acoes-status";
+    status.setAttribute("role", "status");
+
+    // Se a planta já estiver salva, o botão já começa desativado
+    try {
+        if (lerIdsSalvos().includes(planta.id)) {
+            marcarComoAdicionada(botaoAdicionar);
+        }
+    } catch (erro) {
+        console.error(erro);
+    }
+
+    botaoAdicionar.addEventListener("click", () => {
+        try {
+            const ids = lerIdsSalvos();
+            if (ids.includes(planta.id)) {
+                status.textContent = "Essa planta já está na sua lista.";
+            } else {
+                salvarIds([...ids, planta.id]);
+                status.textContent = "Planta adicionada às Minhas Plantas!";
+            }
+            marcarComoAdicionada(botaoAdicionar);
+        } catch (erro) {
+            console.error(erro);
+            status.textContent = `Não foi possível salvar a planta: ${erro.message}`;
+        }
+    });
+
+    secaoAcoes.append(botoes, status);
+    return secaoAcoes;
 }
 
 if (window.location.protocol === "file:") {

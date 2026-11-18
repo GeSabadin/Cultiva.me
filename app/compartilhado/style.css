@@ -845,6 +845,51 @@ main {
     color: var(--olive-wood);
 }
 
+/* Ações da ficha: adicionar / ir para Minhas Plantas */
+.ficha-acoes {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.ficha-acoes-botoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.ficha-acoes .botao {
+    border: 0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.ficha-acoes .botao:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.ficha-acoes .botao:focus-visible {
+    outline: 3px solid var(--fern);
+    outline-offset: 2px;
+}
+
+.ficha-acoes-status {
+    margin-top: 0.75rem;
+    min-height: 1.5em;
+}
+
+/* Quadrado reservando espaço para algo que ainda vai existir */
+.placeholder {
+    margin: 1.5rem 0;
+    padding: 2rem;
+    border: 2px dashed var(--fern);
+    border-radius: 8px;
+    text-align: center;
+    color: var(--olive-wood);
+    font-style: italic;
+}
+
 /* Rodapé */
 footer {
     background-color: var(--olive-leaf-dark);
