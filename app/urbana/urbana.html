@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultiva.me - Cultivo urbano</title>
+    <link rel="stylesheet" href="../compartilhado/style.css">
+    <link rel="icon" type="image/svg+xml" href="../compartilhado/imgs/logo/favicon.svg">
+</head>
+<body>
+    <header>
+        <nav aria-label="Navegação principal">
+            <a class="logo" href="../inicio/index.html"><img src="../compartilhado/imgs/logo/logo.png" alt="Cultiva.me" width="2172" height="724"></a>
+            <ul class="menu">
+                <li><a href="../inicio/index.html">Início</a></li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Explorar</summary>
+                        <ul class="submenu">
+                            <li><a href="../plantas/catalogo-plantas.html">Plantas</a></li>
+                            <li><a href="../guia/guia.html">Guia</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details class="menu-dropdown">
+                        <summary>Cultivar</summary>
+                        <ul class="submenu">
+                            <li><a href="urbana.html" aria-current="page">Meu Espaço</a></li>
+                            <li><a href="../minhas-plantas/minhas-plantas.html">Minhas Plantas</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="../sobre/sobre.html">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="pagina-informativa">
+        <section class="banner-espaco">
+            <div>
+                <h1>Jardinagem em pouco espaço</h1>
+                <p>Varanda, janela ou apartamento sem sol: tem planta para todo canto da cidade.</p>
+            </div>
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M17 28H31L29 42H19L17 28Z" fill="#765E43"/>
+<path d="M24 30V14" stroke="#3A4A22" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M24 23C18 23 16 19 16 15C21 15 24 18 24 23Z" fill="#4A6226"/>
+<path d="M24 19C30 19 32 15 32 11C27 11 24 14 24 19Z" fill="#5A703A"/>
+<path d="M5 30H43M5 42H43M9 30V42M17 30V42M31 30V42M39 30V42" stroke="#3A4A22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+        </section>
+
+        <section>
+            <h2>Qual é o seu espaço?</h2>
+            <form id="escolha-espaco" class="chips">
+                <label class="chip">
+                    <input type="radio" name="espaco" value="varanda-sol" data-ambiente="varanda" data-luz="sol-pleno" checked>
+                    Varanda com sol
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="janela" data-ambiente="jardineira">
+                    Janela
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="pouca-luz" data-ambiente="interior" data-luz="sombra">
+                    Apartamento com pouca luz
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="parede" data-ambiente="horta-vertical">
+                    Parede / horta vertical
+                </label>
+                <label class="chip">
+                    <input type="radio" name="espaco" value="cozinha" data-ambiente="jardineira" data-categoria="erva">
+                    Horta na cozinha
+                </label>
+            </form>
+
+            <div class="conteudo-espaco" data-espaco="varanda-sol">
+                <div class="caixa-dicas">
+                    <h3>Dicas para varanda com sol</h3>
+                    <ul>
+                        <li>Escolha um canto que receba pelo menos 5 horas de sol por dia. Folhosas, pimentas e pimentões produzem bem com isso.</li>
+                        <li>Use vasos com cerca de 20 cm de profundidade e furos no fundo para a água escoar.</li>
+                        <li>Prefira plantas de folha e ciclo curto (alface, rúcula, salsa, cebolinha) e frutos como tomate e pimenta. Raízes como a cenoura precisam de vasos mais fundos.</li>
+                        <li>Regue as plantas adultas de 4 a 5 vezes por semana. Em dias muito quentes, regue de manhã e no fim da tarde.</li>
+                        <li>Nos vasos, deixe entre as plantas cerca de 70% do espaçamento usado num canteiro comum.</li>
+                    </ul>
+                    <p class="fonte">Fontes: <a href="https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/927690/1/HORTA-EM-PEQUENOS-ESPACOS-4-IMP-2017.pdf" target="_blank" rel="noopener noreferrer">Embrapa Hortaliças, <cite>Horta em pequenos espaços</cite> (2012)</a>; <a href="https://ainfo.cnptia.embrapa.br/digital/bitstream/item/33963/1/hortadolar0001.pdf" target="_blank" rel="noopener noreferrer">Emater/RS, <cite>Horta do Lar</cite></a>.</p>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <li><label><input type="checkbox"> Vasos, jardineiras ou baldes com uns 20 cm de profundidade e furos no fundo</label></li>
+                        <li><label><input type="checkbox"> Terra peneirada misturada com adubo orgânico curtido (esterco ou húmus)</label></li>
+                        <li><label><input type="checkbox"> Argila expandida, brita ou cacos de telha para a drenagem</label></li>
+                        <li><label><input type="checkbox"> Pratinho ou bandeja para recolher o excesso de água</label></li>
+                        <li><label><input type="checkbox"> Regador</label></li>
+                        <li><label><input type="checkbox"> Sementes ou mudas</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="janela" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para janela</h3>
+                    <ul>
+                        <li>Observe quantas horas de sol direto a janela recebe. As hortaliças precisam de cerca de 5 horas para produzir bem.</li>
+                        <li>Prefira plantas de raiz curta, que se adaptam a jardineiras rasas: alface, coentro, cebolinha, salsa, morango e tomate-cereja.</li>
+                        <li>Garrafas PET cortadas a 20 cm de altura, com furos na base, viram mini canteiros para o parapeito.</li>
+                        <li>Cubra os furos de drenagem com uma tela fina ou um filtro de café para a terra não escapar.</li>
+                        <li>Apoie as jardineiras em suportes feitos na medida delas, principalmente se ficarem do lado de fora da janela.</li>
+                    </ul>
+                    <p class="fonte">Fontes: <a href="https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/927690/1/HORTA-EM-PEQUENOS-ESPACOS-4-IMP-2017.pdf" target="_blank" rel="noopener noreferrer">Embrapa Hortaliças, <cite>Horta em pequenos espaços</cite> (2012)</a>; <a href="https://ainfo.cnptia.embrapa.br/digital/bitstream/item/33963/1/hortadolar0001.pdf" target="_blank" rel="noopener noreferrer">Emater/RS, <cite>Horta do Lar</cite></a>.</p>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <li><label><input type="checkbox"> Jardineira estreita ou garrafas PET de 2 litros</label></li>
+                        <li><label><input type="checkbox"> Suporte ou prateleira na medida da jardineira</label></li>
+                        <li><label><input type="checkbox"> Tela fina ou filtro de café</label></li>
+                        <li><label><input type="checkbox"> Argila expandida para o fundo</label></li>
+                        <li><label><input type="checkbox"> Substrato ou terra adubada</label></li>
+                        <li><label><input type="checkbox"> Bandeja para recolher o excesso de água</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="pouca-luz" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para apartamento com pouca luz</h3>
+                    <ul>
+                        <li>Hortaliças precisam de cerca de 5 horas de sol por dia. Sem isso, prefira folhagens que toleram sombra, como zamioculca, espada-de-são-jorge e jiboia.</li>
+                        <li>Mesmo plantas de sombra precisam de claridade: deixe-as a até uns 3 metros de uma janela, não no fundo do cômodo.</li>
+                        <li>Com pouca luz a terra demora a secar. Regue só quando ela estiver seca; a zamioculca, por exemplo, pede água em média a cada 2 ou 3 semanas.</li>
+                        <li>Folhas desbotando ou pontas enrugadas indicam falta de luz. Aproxime a planta da janela ou complemente com luz artificial.</li>
+                        <li>Com luz artificial, de 14 a 16 horas por dia bastam. Não passe de 16 horas: as plantas também precisam de descanso.</li>
+                    </ul>
+                    <p class="fonte">Fontes: <a href="https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/927690/1/HORTA-EM-PEQUENOS-ESPACOS-4-IMP-2017.pdf" target="_blank" rel="noopener noreferrer">Embrapa Hortaliças, <cite>Horta em pequenos espaços</cite> (2012)</a>; <a href="https://extension.illinois.edu/blogs/flowers-fruits-and-frass/2023-01-13-brighten-dim-interiors-low-light-houseplants" target="_blank" rel="noopener noreferrer">University of Illinois Extension, <cite>Brighten up dim interiors with low-light houseplants</cite> (2023)</a>; <a href="https://extension.psu.edu/low-light-houseplants" target="_blank" rel="noopener noreferrer">Penn State Extension, <cite>Low Light Houseplants</cite></a>; <a href="https://extension.illinois.edu/houseplants/lighting" target="_blank" rel="noopener noreferrer">University of Illinois Extension, <cite>Lighting</cite></a>.</p>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <li><label><input type="checkbox"> Vaso com furo no fundo e pratinho</label></li>
+                        <li><label><input type="checkbox"> Substrato que drene bem</label></li>
+                        <li><label><input type="checkbox"> Uma planta tolerante à sombra</label></li>
+                        <li><label><input type="checkbox"> Regador de bico fino</label></li>
+                        <li><label><input type="checkbox"> Opcional: luminária com lâmpada fluorescente branca fria e um timer</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="parede" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para parede e horta vertical</h3>
+                    <ul>
+                        <li>Escolha uma parede que receba sol pela manhã ou à tarde. Em lugares quentes, as plantas não precisam de sol o dia todo.</li>
+                        <li>Encaixe garrafas PET em colunas de 9 e corte aberturas de 3×3 ou 4×4 cm em cada uma, deixando um lado preso para apoiar as folhas.</li>
+                        <li>Pinte as garrafas de branco para a temperatura da terra variar menos.</li>
+                        <li>Deixe a garrafa do topo inteira, cheia de água e com furinhos de agulha perto da tampa: ela rega a coluna por gotejamento. O sistema aguenta uns 3 dias sem regar.</li>
+                        <li>Dá para reaproveitar a água do ar-condicionado com uma mangueira furada passando pelas colunas.</li>
+                        <li>Outra opção são canos de PVC de 200 ou 300 mm cortados ao meio, como calhas, com furos para drenagem.</li>
+                    </ul>
+                    <p class="fonte">Fontes: <a href="https://www.embrapa.br/busca-de-noticias/-/noticia/14680728/horta-domestica-reaproveita-materiais-e-produz-alimentos-agroecologicos" target="_blank" rel="noopener noreferrer">Embrapa Pantanal, <cite>Horta doméstica reaproveita materiais e produz alimentos agroecológicos</cite> (2016)</a>; <a href="https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/927690/1/HORTA-EM-PEQUENOS-ESPACOS-4-IMP-2017.pdf" target="_blank" rel="noopener noreferrer">Embrapa Hortaliças, <cite>Horta em pequenos espaços</cite> (2012)</a>.</p>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <li><label><input type="checkbox"> 3 caibros ou postes de madeira (2 de 1,60 m e 1 de 2 m)</label></li>
+                        <li><label><input type="checkbox"> Até 80 garrafas PET com gargalo afunilado</label></li>
+                        <li><label><input type="checkbox"> 50 a 60 kg de composto orgânico (ou 40 kg de composto e 10 L de substrato)</label></li>
+                        <li><label><input type="checkbox"> 15 a 18 m de arame liso para pendurar as colunas</label></li>
+                        <li><label><input type="checkbox"> 10 m de arame fino para amarrar as garrafas</label></li>
+                        <li><label><input type="checkbox"> Tinta branca e uma agulha para os furos</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="conteudo-espaco" data-espaco="cozinha" hidden>
+                <div class="caixa-dicas">
+                    <h3>Dicas para horta na cozinha</h3>
+                    <ul>
+                        <li>Coloque os temperos na janela mais clara da cozinha: eles precisam de cerca de 5 horas de sol por dia.</li>
+                        <li>Bons temperos para vaso: salsa, coentro, cebolinha, alecrim, hortelã, manjericão e erva-cidreira.</li>
+                        <li>Confira a umidade da terra todas as manhãs. Ela não deve ficar nem seca nem encharcada.</li>
+                        <li>Corte só as folhas e os raminhos que for usar, direto do pé.</li>
+                        <li>Se usar defensivos naturais contra pragas, espere pelo menos 5 dias antes de colher.</li>
+                    </ul>
+                    <p class="fonte">Fontes: <a href="https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/927690/1/HORTA-EM-PEQUENOS-ESPACOS-4-IMP-2017.pdf" target="_blank" rel="noopener noreferrer">Embrapa Hortaliças, <cite>Horta em pequenos espaços</cite> (2012)</a>; <a href="https://ainfo.cnptia.embrapa.br/digital/bitstream/item/33963/1/hortadolar0001.pdf" target="_blank" rel="noopener noreferrer">Emater/RS, <cite>Horta do Lar</cite></a>; <a href="https://extension.illinois.edu/blogs/flowers-fruits-and-frass/2024-02-26-houseplants-grow-your-kitchen-counter" target="_blank" rel="noopener noreferrer">University of Illinois Extension, <cite>Houseplants to grow on your kitchen counter</cite> (2024)</a>.</p>
+                </div>
+                <div class="caixa-materiais">
+                    <h3>Você vai precisar</h3>
+                    <ul>
+                        <li><label><input type="checkbox"> Vasos de pelo menos 1 litro ou uma jardineira de uns 20 cm de profundidade</label></li>
+                        <li><label><input type="checkbox"> Pratinhos para os vasos</label></li>
+                        <li><label><input type="checkbox"> Argila expandida para a drenagem</label></li>
+                        <li><label><input type="checkbox"> Terra adubada com húmus de minhoca</label></li>
+                        <li><label><input type="checkbox"> Mudas ou sementes de temperos</label></li>
+                        <li><label><input type="checkbox"> Tesoura para a colheita</label></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="titulo-com-link">
+                <h2>Plantas recomendadas para este espaço</h2>
+                <a id="ver-todas" href="../plantas/catalogo-plantas.html?ambiente=varanda&amp;luz=sol-pleno">Ver todas na busca</a>
+            </div>
+            <p id="status-recomendadas" role="status"></p>
+            <div id="plantas-recomendadas" class="cards-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="links-uteis">Links úteis</div>
+        <div class="licenca">Licença de uso</div>
+    </footer>
+    <script type="module" src="../compartilhado/navegacao.js"></script>
+    <script type="module" src="urbana.js"></script>
+</body>
+</html>

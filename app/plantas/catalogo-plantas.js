@@ -1,0 +1,288 @@
+import { Planta } from "../compartilhado/modelos/planta.js";
+
+const campoBusca = document.getElementById("busca");
+const filtros = document.getElementById("filtros-plantas");
+const lista = document.getElementById("lista");
+const mensagem = document.getElementById("mensagem");
+const paginacao = document.getElementById("paginacao");
+const plantasPorPagina = 12;
+const urlCatalogo = new URL("../../Data/Plantas.json", import.meta.url);
+
+let plantas = [];
+let resultados = [];
+let paginaAtual = 1;
+
+function normalizar(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+}
+
+function textoDaPlanta(planta) {
+    const problemas = Array.isArray(planta.problemasComuns)
+        ? planta.problemasComuns.flatMap((problema) => Object.values(problema))
+        : [];
+    const dicas = Array.isArray(planta.dicas) ? planta.dicas : [];
+
+    return normalizar([
+        planta.id,
+        planta.nomePopular,
+        planta.nomeCientifico,
+        planta.familia,
+        planta.regiaoDeOrigem,
+        planta.descricao,
+        ...dicas,
+        ...problemas,
+    ].join(" "));
+}
+
+function correspondeCaracteristicas(planta) {
+    const ambiente = document.getElementById("filtro-ambiente").value;
+    const propagacao = document.getElementById("filtro-propagacao").value;
+    const ciclo = planta.ciclo || {};
+    const solo = planta.solo || {};
+    const agua = planta.agua || {};
+    const clima = planta.clima || {};
+    const porte = planta.porte || {};
+
+    if (document.getElementById("filtro-categoria").value &&
+        planta.categoria !== document.getElementById("filtro-categoria").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-dificuldade").value &&
+        planta.dificuldade !== document.getElementById("filtro-dificuldade").value) {
+        return false;
+    }
+    if (ambiente && !(planta.ambientes || []).includes(ambiente)) {
+        return false;
+    }
+    if (document.getElementById("filtro-luz").value &&
+        planta.luz !== document.getElementById("filtro-luz").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-ciclo").value &&
+        ciclo.tipo !== document.getElementById("filtro-ciclo").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-toxicidade").value &&
+        planta.toxicidadePets !== document.getElementById("filtro-toxicidade").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-agua").value &&
+        agua.necessidade !== document.getElementById("filtro-agua").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-modo-rega").value &&
+        agua.modo !== document.getElementById("filtro-modo-rega").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-ph").value &&
+        solo.ph !== document.getElementById("filtro-ph").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-drenagem").value &&
+        solo.drenagem !== document.getElementById("filtro-drenagem").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-umidade").value &&
+        clima.umidade !== document.getElementById("filtro-umidade").value) {
+        return false;
+    }
+    if (document.getElementById("filtro-crescimento").value &&
+        porte.crescimento !== document.getElementById("filtro-crescimento").value) {
+        return false;
+    }
+    if (propagacao && !(planta.propagacao || []).includes(propagacao)) {
+        return false;
+    }
+    return true;
+}
+
+function criarCartao(planta) {
+    const cartao = document.createElement("article");
+    cartao.className = "card";
+
+    const imagem = planta.imagem || {};
+    if (imagem.arquivo) {
+        const foto = document.createElement("img");
+        foto.className = "planta-imagem";
+        foto.src = `../compartilhado/${imagem.arquivo}`;
+        foto.alt = `Foto de ${planta.nomePopular}`;
+        foto.loading = "lazy";
+        cartao.append(foto);
+
+        if (imagem.autor && imagem.licenca && imagem.url) {
+            const credito = document.createElement("p");
+            credito.className = "credito-imagem";
+            const linkCredito = document.createElement("a");
+            linkCredito.href = imagem.url;
+            linkCredito.target = "_blank";
+            linkCredito.rel = "noopener noreferrer";
+            linkCredito.textContent = `${imagem.autor} · ${imagem.licenca}`;
+            credito.append("Foto: ", linkCredito);
+            cartao.append(credito);
+        }
+    }
+
+    const titulo = document.createElement("h3");
+    const linkFicha = document.createElement("a");
+    linkFicha.href = `ficha-planta.html?id=${encodeURIComponent(planta.id)}`;
+    linkFicha.textContent = planta.nomePopular;
+    titulo.append(linkFicha);
+    cartao.append(titulo);
+
+    if (planta.descricao) {
+        const descricao = document.createElement("p");
+        descricao.textContent = planta.descricao;
+        cartao.append(descricao);
+    }
+
+    return cartao;
+}
+
+function mostrar(listaDePlantas) {
+    const inicio = (paginaAtual - 1) * plantasPorPagina;
+    const cartoes = listaDePlantas.slice(inicio, inicio + plantasPorPagina).map(criarCartao);
+    lista.replaceChildren(...cartoes);
+
+    mostrarPaginacao(listaDePlantas.length);
+
+    const quantidade = listaDePlantas.length;
+    mensagem.textContent = `${quantidade} planta${quantidade === 1 ? "" : "s"} encontrada${quantidade === 1 ? "" : "s"}.`;
+}
+
+function mostrarPaginacao(quantidade) {
+    const totalPaginas = Math.ceil(quantidade / plantasPorPagina);
+    paginacao.replaceChildren();
+    paginacao.hidden = totalPaginas <= 1;
+    if (paginacao.hidden) {
+        return;
+    }
+
+    let inicio = Math.max(1, paginaAtual - 1);
+    let fim = Math.min(totalPaginas, paginaAtual + 1);
+    if (totalPaginas <= 7) {
+        inicio = 1;
+        fim = totalPaginas;
+    } else if (paginaAtual <= 3) {
+        inicio = 1;
+        fim = 4;
+    } else if (paginaAtual >= totalPaginas - 2) {
+        inicio = totalPaginas - 3;
+        fim = totalPaginas;
+    }
+
+    const paginas = new Set([1, totalPaginas]);
+    for (let numero = inicio; numero <= fim; numero++) {
+        paginas.add(numero);
+    }
+
+    let anterior = 0;
+    for (const numero of [...paginas].sort((a, b) => a - b)) {
+        if (numero - anterior === 2) {
+            adicionarPagina(numero - 1);
+        } else if (numero - anterior > 2) {
+            const reticencias = document.createElement("span");
+            reticencias.textContent = "...";
+            reticencias.setAttribute("aria-hidden", "true");
+            paginacao.append(reticencias);
+        }
+        adicionarPagina(numero);
+        anterior = numero;
+    }
+}
+
+function adicionarPagina(numero) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.textContent = numero;
+    botao.dataset.pagina = numero;
+    botao.setAttribute("aria-label", `Página ${numero}`);
+    botao.setAttribute("aria-controls", "lista");
+    if (numero === paginaAtual) {
+        botao.setAttribute("aria-current", "page");
+    }
+    paginacao.append(botao);
+}
+
+paginacao.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("button[data-pagina]");
+    if (!botao || !paginacao.contains(botao)) {
+        return;
+    }
+    const numero = Number(botao.dataset.pagina);
+    const totalPaginas = Math.ceil(resultados.length / plantasPorPagina);
+    if (!Number.isInteger(numero) || numero < 1 || numero > totalPaginas || numero === paginaAtual) {
+        return;
+    }
+
+    paginaAtual = numero;
+    mostrar(resultados);
+    paginacao.querySelector('[aria-current="page"]').focus();
+});
+
+function buscar() {
+    const termo = normalizar(campoBusca.value.trim());
+    const resultado = plantas.filter((planta) =>
+        (!termo || textoDaPlanta(planta).includes(termo)) &&
+        correspondeCaracteristicas(planta));
+    resultados = resultado;
+    paginaAtual = 1;
+    mostrar(resultados);
+}
+
+function aplicarFiltrosDaUrl() {
+    const parametros = new URLSearchParams(window.location.search);
+    let aplicados = 0;
+
+    parametros.forEach((valor, nome) => {
+        const select = document.getElementById(`filtro-${nome}`);
+        if (!select || !valor) {
+            return;
+        }
+        const opcaoExiste = Array.from(select.options).some((opcao) => opcao.value === valor);
+        if (opcaoExiste) {
+            select.value = valor;
+            aplicados++;
+        }
+    });
+
+    if (aplicados > 0) {
+        document.querySelector(".painel-filtros").open = true; 
+    }
+}
+
+aplicarFiltrosDaUrl();
+
+campoBusca.addEventListener("input", buscar);
+filtros.addEventListener("input", buscar);
+filtros.addEventListener("change", buscar);
+filtros.addEventListener("submit", (evento) => evento.preventDefault());
+filtros.addEventListener("reset", () => window.setTimeout(buscar, 0));
+
+if (window.location.protocol === "file:") {
+    mensagem.textContent =
+        "Abra a página por um servidor local para carregar e filtrar o catálogo de plantas.";
+} else {
+    fetch(urlCatalogo)
+        .then((resposta) => {
+            if (!resposta.ok) {
+                throw new Error(`Falha ao carregar o catálogo: HTTP ${resposta.status}`);
+            }
+            return resposta.json();
+        })
+        .then((dados) => {
+            if (!Array.isArray(dados.plantas)) {
+                throw new Error("O arquivo Plantas.json não contém uma lista de plantas válida.");
+            }
+            plantas = dados.plantas.map((planta) => new Planta(planta));
+            buscar();
+        })
+        .catch((erro) => {
+            console.error(erro);
+            mensagem.textContent =
+                `Não foi possível carregar o catálogo (${erro.message}). ` +
+                "Inicie o servidor local na pasta raiz do projeto.";
+        });
+}
